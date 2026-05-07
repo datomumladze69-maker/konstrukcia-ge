@@ -1,6 +1,6 @@
-export default function Home() {
+export default function Page() {
   return (
-    <main style={{ padding: 20 }}>
+    <main>
       <h1>Konstrukcia.ge</h1>
       <p>სამშენებლო მასალების გაქირავება</p>
     </main>
