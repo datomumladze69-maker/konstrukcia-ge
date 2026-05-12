@@ -23,7 +23,9 @@ export default async function Page() {
 
         .page {
           min-height: 100vh;
-          background: #f3f4f6;
+          background:
+            radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 34%),
+            linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
           font-family: Arial, sans-serif;
           color: #111827;
         }
@@ -43,12 +45,13 @@ export default async function Page() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: rgba(255, 255, 255, 0.12);
+          background: rgba(17, 24, 39, 0.34);
           border: 1px solid rgba(255, 255, 255, 0.25);
-          backdrop-filter: blur(10px);
+          backdrop-filter: blur(14px);
           border-radius: 999px;
           padding: 14px 22px;
           gap: 18px;
+          box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
         }
 
         .logo {
@@ -66,10 +69,10 @@ export default async function Page() {
         }
 
         .navSearchInput {
-          width: 190px;
+          width: 210px;
           height: 42px;
           border: 1px solid rgba(255,255,255,0.28);
-          background: rgba(255,255,255,0.14);
+          background: rgba(255,255,255,0.16);
           backdrop-filter: blur(10px);
           border-radius: 999px;
           padding: 0 16px;
@@ -77,15 +80,17 @@ export default async function Page() {
           outline: none;
           font-size: 14px;
           font-weight: 700;
+          transition: all 0.25s ease;
         }
 
         .navSearchInput::placeholder {
-          color: rgba(255,255,255,0.75);
+          color: rgba(255,255,255,0.78);
         }
 
         .navSearchInput:focus {
           border-color: rgba(249, 115, 22, 0.95);
-          background: rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.24);
+          box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.16);
         }
 
         .navLinks {
@@ -98,16 +103,24 @@ export default async function Page() {
           color: white;
           text-decoration: none;
           font-size: 15px;
-          font-weight: 700;
+          font-weight: 800;
           opacity: 0.95;
           white-space: nowrap;
+          transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .navLinks a:hover {
+          color: #fed7aa;
+          opacity: 1;
         }
 
         .cover {
           width: 100%;
-          height: 500px;
+          height: 540px;
           position: relative;
           overflow: hidden;
+          border-bottom-left-radius: 34px;
+          border-bottom-right-radius: 34px;
         }
 
         .cover img {
@@ -115,31 +128,31 @@ export default async function Page() {
           height: 100%;
           object-fit: cover;
           display: block;
+          transform: scale(1.02);
         }
 
         .overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.65)
-          );
+          background:
+            linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7));
           display: flex;
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          padding: 90px 20px 20px;
+          padding: 110px 20px 20px;
           text-align: center;
         }
 
         .coverBadge {
-          background: rgba(249, 115, 22, 0.95);
+          background: rgba(249, 115, 22, 0.96);
           color: white;
-          padding: 9px 16px;
+          padding: 10px 17px;
           border-radius: 999px;
           font-size: 14px;
-          font-weight: 800;
+          font-weight: 900;
           margin-bottom: 18px;
+          box-shadow: 0 12px 28px rgba(249, 115, 22, 0.35);
         }
 
         .coverTitle {
@@ -149,30 +162,40 @@ export default async function Page() {
           margin: 0 0 14px;
           letter-spacing: -3px;
           line-height: 1;
+          max-width: 900px;
+          text-shadow: 0 14px 38px rgba(0, 0, 0, 0.38);
         }
 
         .coverText {
           font-size: 24px;
           color: #f3f4f6;
           margin: 0 0 28px;
+          max-width: 720px;
+          line-height: 1.45;
         }
 
         .coverButton {
           display: inline-block;
           background: white;
           color: #111827;
-          padding: 14px 24px;
+          padding: 15px 26px;
           border-radius: 999px;
           font-size: 16px;
           font-weight: 900;
           text-decoration: none;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .coverButton:hover {
+          transform: translateY(-3px);
+          background: #fff7ed;
         }
 
         .container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 50px 20px 70px;
+          padding: 56px 20px 76px;
         }
 
         .sectionTop {
@@ -180,20 +203,21 @@ export default async function Page() {
           align-items: center;
           justify-content: space-between;
           gap: 20px;
-          margin-bottom: 28px;
+          margin-bottom: 30px;
         }
 
         .sectionTitle {
           margin: 0;
-          font-size: 34px;
+          font-size: 36px;
           font-weight: 900;
-          letter-spacing: -1px;
+          letter-spacing: -1.2px;
         }
 
         .sectionText {
           margin: 8px 0 0;
           color: #6b7280;
           font-size: 16px;
+          line-height: 1.5;
         }
 
         .count {
@@ -202,9 +226,10 @@ export default async function Page() {
           padding: 12px 18px;
           border-radius: 999px;
           font-size: 15px;
-          font-weight: 800;
+          font-weight: 900;
           color: #374151;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+          border: 1px solid rgba(229, 231, 235, 0.9);
         }
 
         .grid {
@@ -214,37 +239,47 @@ export default async function Page() {
         }
 
         .card {
-          background: white;
-          border-radius: 22px;
+          background: rgba(255, 255, 255, 0.96);
+          border-radius: 26px;
           overflow: hidden;
-          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-          border: 1px solid rgba(229, 231, 235, 0.9);
+          box-shadow: 0 14px 34px rgba(15, 23, 42, 0.09);
+          transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+          border: 1px solid rgba(226, 232, 240, 0.95);
+          position: relative;
         }
 
         .card:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 22px 45px rgba(0, 0, 0, 0.16);
+          transform: translateY(-8px);
+          box-shadow: 0 24px 52px rgba(15, 23, 42, 0.18);
+          border-color: rgba(249, 115, 22, 0.34);
         }
 
         .imageBox {
           width: 100%;
-          height: 150px;
+          height: 172px;
           background: #e5e7eb;
           overflow: hidden;
           position: relative;
+        }
+
+        .imageBox::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.32));
+          pointer-events: none;
         }
 
         .imageBox img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          transition: transform 0.35s ease;
           display: block;
         }
 
         .card:hover .imageBox img {
-          transform: scale(1.07);
+          transform: scale(1.08);
         }
 
         .priceBadge {
@@ -253,25 +288,27 @@ export default async function Page() {
           bottom: 12px;
           background: #111827;
           color: white;
-          padding: 7px 11px;
+          padding: 8px 12px;
           border-radius: 999px;
           font-size: 14px;
           font-weight: 900;
+          z-index: 2;
+          box-shadow: 0 10px 24px rgba(0,0,0,0.26);
         }
 
         .content {
-          padding: 17px;
+          padding: 18px;
         }
 
         .category {
           display: inline-block;
           background: #fff7ed;
           color: #ea580c;
-          padding: 6px 11px;
+          padding: 7px 12px;
           border-radius: 999px;
           font-size: 13px;
-          font-weight: 800;
-          margin-bottom: 11px;
+          font-weight: 900;
+          margin-bottom: 12px;
         }
 
         .name {
@@ -280,42 +317,48 @@ export default async function Page() {
           color: #111827;
           margin: 0 0 8px;
           min-height: 52px;
+          line-height: 1.22;
+          letter-spacing: -0.4px;
         }
 
         .smallText {
           font-size: 14px;
           color: #6b7280;
-          margin: 0 0 16px;
+          margin: 0 0 17px;
+          line-height: 1.45;
         }
 
         .button {
           display: block;
           width: 100%;
-          padding: 12px;
+          padding: 13px;
           border: none;
-          border-radius: 14px;
+          border-radius: 16px;
           background: #111827;
           color: white;
           font-size: 15px;
-          font-weight: 800;
+          font-weight: 900;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
           text-align: center;
           text-decoration: none;
         }
 
         .button:hover {
           background: #f97316;
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px rgba(249, 115, 22, 0.28);
         }
 
         .empty {
           background: white;
-          padding: 30px;
-          border-radius: 20px;
+          padding: 34px;
+          border-radius: 24px;
           text-align: center;
           font-size: 22px;
-          color: red;
-          box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+          color: #dc2626;
+          box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
+          border: 1px solid rgba(229, 231, 235, 0.9);
         }
 
         .floatingButtons {
@@ -339,8 +382,8 @@ export default async function Page() {
           justify-content: center;
           text-decoration: none;
           font-size: 28px;
-          box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-          transition: transform 0.3s ease;
+          box-shadow: 0 14px 28px rgba(0,0,0,0.24);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .whatsappButton {
@@ -353,7 +396,8 @@ export default async function Page() {
 
         .whatsappButton:hover,
         .phoneButton:hover {
-          transform: scale(1.1);
+          transform: scale(1.08) translateY(-2px);
+          box-shadow: 0 18px 36px rgba(0,0,0,0.28);
         }
 
         @media (max-width: 1100px) {
@@ -362,7 +406,7 @@ export default async function Page() {
           }
 
           .coverTitle {
-            font-size: 56px;
+            font-size: 58px;
           }
 
           .navInner {
@@ -374,7 +418,7 @@ export default async function Page() {
           }
 
           .navSearchInput {
-            width: 150px;
+            width: 160px;
           }
         }
 
@@ -384,10 +428,15 @@ export default async function Page() {
           }
 
           .navInner {
-            border-radius: 22px;
+            border-radius: 24px;
             align-items: flex-start;
             gap: 12px;
             flex-direction: column;
+            padding: 14px;
+          }
+
+          .logo {
+            font-size: 20px;
           }
 
           .navRight {
@@ -401,17 +450,27 @@ export default async function Page() {
           }
 
           .navLinks {
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
           }
 
+          .navLinks a {
+            font-size: 14px;
+          }
+
           .cover {
-            height: 430px;
+            height: 470px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+          }
+
+          .overlay {
+            padding-top: 145px;
           }
 
           .coverTitle {
-            font-size: 39px;
-            letter-spacing: -1px;
+            font-size: 40px;
+            letter-spacing: -1.4px;
           }
 
           .coverText {
@@ -419,7 +478,7 @@ export default async function Page() {
           }
 
           .container {
-            padding: 34px 14px 55px;
+            padding: 38px 14px 60px;
           }
 
           .sectionTop {
@@ -428,15 +487,21 @@ export default async function Page() {
           }
 
           .sectionTitle {
-            font-size: 28px;
+            font-size: 29px;
+          }
+
+          .count {
+            width: 100%;
+            text-align: center;
           }
 
           .grid {
             grid-template-columns: 1fr;
+            gap: 18px;
           }
 
           .imageBox {
-            height: 160px;
+            height: 190px;
           }
 
           .name {
