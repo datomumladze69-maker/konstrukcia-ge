@@ -17,10 +17,8 @@ export default function ProductsSearchClient({
   products: Product[]
 }) {
   const [search, setSearch] = useState("")
-  const [selectedCategory, setSelectedCategory] =
-    useState("ყველა")
+  const [selectedCategory, setSelectedCategory] = useState("ყველა")
   const [showFilter, setShowFilter] = useState(false)
-
   const [darkMode, setDarkMode] = useState(false)
 
   useEffect(() => {
@@ -32,10 +30,7 @@ export default function ProductsSearchClient({
   }, [])
 
   useEffect(() => {
-    localStorage.setItem(
-      "dark-mode",
-      darkMode.toString()
-    )
+    localStorage.setItem("dark-mode", darkMode.toString())
   }, [darkMode])
 
   const filteredProducts = products.filter((product) => {
@@ -63,24 +58,31 @@ export default function ProductsSearchClient({
         body {
           margin: 0;
           font-family: Arial, sans-serif;
-          background: #f3f4f6;
         }
 
         .page {
           min-height: 100vh;
-          background: #f3f4f6;
+          background:
+            radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 34%),
+            linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
           color: #111827;
           transition: all 0.3s ease;
         }
 
         .dark {
-          background: #0f172a;
+          background:
+            radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 32%),
+            linear-gradient(180deg, #020617 0%, #0f172a 100%);
           color: white;
         }
 
         .navbar {
-          background: #111827;
-          padding: 20px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 20;
+          padding: 22px 40px;
         }
 
         .navInner {
@@ -90,29 +92,56 @@ export default function ProductsSearchClient({
           align-items: center;
           justify-content: space-between;
           gap: 20px;
+          background: rgba(17, 24, 39, 0.36);
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          backdrop-filter: blur(14px);
+          border-radius: 999px;
+          padding: 14px 22px;
+          box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
         }
 
         .logo {
           color: white;
-          font-size: 24px;
+          font-size: 23px;
           font-weight: 900;
+          letter-spacing: -1px;
+          white-space: nowrap;
         }
 
         .navRight {
           display: flex;
           align-items: center;
-          gap: 18px;
+          gap: 16px;
           flex-wrap: wrap;
         }
 
         .navSearchInput {
           width: 220px;
           height: 44px;
-          border: none;
-          border-radius: 12px;
-          padding: 0 14px;
+          border: 1px solid rgba(255,255,255,0.28);
+          background: rgba(255,255,255,0.16);
+          color: white;
+          border-radius: 999px;
+          padding: 0 16px;
           font-size: 15px;
+          font-weight: 800;
           outline: none;
+        }
+
+        .navSearchInput::placeholder {
+          color: rgba(255,255,255,0.78);
+        }
+
+        .themeButton {
+          border: none;
+          background: white;
+          width: 44px;
+          height: 44px;
+          border-radius: 999px;
+          cursor: pointer;
+          font-size: 18px;
+          font-weight: 900;
+          box-shadow: 0 10px 22px rgba(0,0,0,0.16);
         }
 
         .navLinks {
@@ -125,25 +154,16 @@ export default function ProductsSearchClient({
         .navLinks a {
           color: white;
           text-decoration: none;
-          font-weight: 800;
-          font-size: 14px;
-        }
-
-        .themeButton {
-          border: none;
-          background: white;
-          width: 44px;
-          height: 44px;
-          border-radius: 999px;
-          cursor: pointer;
-          font-size: 18px;
           font-weight: 900;
+          font-size: 14px;
         }
 
         .cover {
           position: relative;
-          height: 500px;
+          height: 540px;
           overflow: hidden;
+          border-bottom-left-radius: 34px;
+          border-bottom-right-radius: 34px;
         }
 
         .cover img {
@@ -151,18 +171,19 @@ export default function ProductsSearchClient({
           height: 100%;
           object-fit: cover;
           display: block;
+          transform: scale(1.02);
         }
 
         .overlay {
           position: absolute;
           inset: 0;
-          background: rgba(0,0,0,0.55);
+          background: linear-gradient(90deg, rgba(0,0,0,0.78), rgba(0,0,0,0.46), rgba(0,0,0,0.72));
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 20px;
+          padding: 110px 20px 20px;
         }
 
         .coverBadge {
@@ -172,41 +193,48 @@ export default function ProductsSearchClient({
           border-radius: 999px;
           font-weight: 900;
           margin-bottom: 20px;
+          box-shadow: 0 12px 28px rgba(249, 115, 22, 0.35);
         }
 
         .coverTitle {
           color: white;
-          font-size: 56px;
+          font-size: 76px;
           margin: 0;
           font-weight: 900;
+          letter-spacing: -3px;
+          line-height: 1;
+          text-shadow: 0 14px 38px rgba(0,0,0,0.38);
         }
 
         .coverText {
           color: #e5e7eb;
-          font-size: 20px;
+          font-size: 22px;
           margin-top: 18px;
           max-width: 700px;
+          line-height: 1.45;
         }
 
         .coverButton {
           margin-top: 28px;
-          background: #f97316;
-          color: white;
+          background: white;
+          color: #111827;
           text-decoration: none;
-          padding: 15px 24px;
-          border-radius: 14px;
+          padding: 15px 26px;
+          border-radius: 999px;
           font-weight: 900;
-          transition: 0.3s;
+          transition: 0.25s;
+          box-shadow: 0 16px 34px rgba(0,0,0,0.28);
         }
 
         .coverButton:hover {
           transform: translateY(-3px);
+          background: #fff7ed;
         }
 
         .container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 50px 20px;
+          padding: 56px 20px 76px;
         }
 
         .sectionTop {
@@ -219,15 +247,17 @@ export default function ProductsSearchClient({
         }
 
         .sectionTitle {
-          font-size: 38px;
+          font-size: 36px;
           margin: 0;
           font-weight: 900;
+          letter-spacing: -1.2px;
         }
 
         .sectionText {
           margin-top: 10px;
           color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           font-weight: 700;
+          line-height: 1.5;
         }
 
         .productsActions {
@@ -246,29 +276,29 @@ export default function ProductsSearchClient({
           border-radius: 999px;
           background: #111827;
           color: white;
-          padding: 12px 18px;
+          padding: 13px 19px;
           font-size: 14px;
           font-weight: 900;
           cursor: pointer;
+          transition: 0.25s;
         }
 
         .filterButton:hover {
           background: #f97316;
+          transform: translateY(-2px);
         }
 
         .filterMenu {
           position: absolute;
-          top: 48px;
+          top: 52px;
           right: 0;
-          background: ${
-            darkMode ? "#1e293b" : "white"
-          };
-          border-radius: 18px;
-          box-shadow: 0 16px 35px rgba(0,0,0,0.18);
+          background: ${darkMode ? "#1e293b" : "white"};
+          border-radius: 20px;
+          box-shadow: 0 18px 42px rgba(0,0,0,0.2);
           padding: 10px;
-          width: 230px;
+          width: 240px;
           z-index: 100;
-          border: 1px solid #334155;
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
         }
 
         .filterItem {
@@ -276,20 +306,16 @@ export default function ProductsSearchClient({
           border: none;
           background: transparent;
           text-align: left;
-          padding: 12px 14px;
-          border-radius: 12px;
+          padding: 13px 14px;
+          border-radius: 14px;
           font-size: 14px;
           font-weight: 900;
           cursor: pointer;
-          color: ${
-            darkMode ? "white" : "#111827"
-          };
+          color: ${darkMode ? "white" : "#111827"};
         }
 
         .filterItem:hover {
-          background: ${
-            darkMode ? "#334155" : "#f3f4f6"
-          };
+          background: ${darkMode ? "#334155" : "#f3f4f6"};
         }
 
         .activeFilter {
@@ -298,13 +324,12 @@ export default function ProductsSearchClient({
         }
 
         .count {
-          background: ${
-            darkMode ? "#1e293b" : "white"
-          };
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 999px;
           padding: 14px 22px;
           font-weight: 900;
-          box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+          box-shadow: 0 12px 28px rgba(15,23,42,0.1);
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
         }
 
         .grid {
@@ -314,23 +339,33 @@ export default function ProductsSearchClient({
         }
 
         .card {
-          background: ${
-            darkMode ? "#1e293b" : "white"
-          };
-          border-radius: 24px;
+          background: ${darkMode ? "#1e293b" : "rgba(255,255,255,0.96)"};
+          border-radius: 26px;
           overflow: hidden;
-          box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-          transition: 0.3s;
+          box-shadow: 0 14px 34px rgba(15,23,42,0.09);
+          transition: 0.28s;
+          border: 1px solid ${darkMode ? "#334155" : "rgba(226,232,240,0.95)"};
+          position: relative;
         }
 
         .card:hover {
-          transform: translateY(-6px);
+          transform: translateY(-8px);
+          box-shadow: 0 24px 52px rgba(15,23,42,0.18);
+          border-color: rgba(249, 115, 22, 0.38);
         }
 
         .imageBox {
           position: relative;
           height: 220px;
           overflow: hidden;
+          background: #e5e7eb;
+        }
+
+        .imageBox::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.34));
         }
 
         .imageBox img {
@@ -338,6 +373,7 @@ export default function ProductsSearchClient({
           height: 100%;
           object-fit: cover;
           transition: transform 0.4s ease;
+          display: block;
         }
 
         .card:hover .imageBox img {
@@ -350,9 +386,23 @@ export default function ProductsSearchClient({
           right: 12px;
           background: #111827;
           color: white;
-          padding: 8px 12px;
+          padding: 9px 13px;
           border-radius: 999px;
           font-weight: 900;
+          z-index: 2;
+        }
+
+        .stockBadge {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          background: rgba(34, 197, 94, 0.95);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 999px;
+          font-size: 13px;
+          font-weight: 900;
+          z-index: 2;
         }
 
         .content {
@@ -374,43 +424,56 @@ export default function ProductsSearchClient({
           margin: 0;
           font-size: 22px;
           font-weight: 900;
+          line-height: 1.22;
+          letter-spacing: -0.4px;
+        }
+
+        .rating {
+          margin-top: 10px;
+          color: #f59e0b;
+          font-size: 14px;
+          font-weight: 900;
         }
 
         .smallText {
           margin-top: 14px;
           line-height: 1.6;
-          color: ${
-            darkMode ? "#cbd5e1" : "#6b7280"
-          };
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           min-height: 70px;
+        }
+
+        .buttonRow {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 10px;
+          margin-top: 18px;
         }
 
         .button {
           display: inline-block;
           width: 100%;
           text-align: center;
-          margin-top: 18px;
           background: #f97316;
           color: white;
           text-decoration: none;
           padding: 14px;
-          border-radius: 14px;
+          border-radius: 16px;
           font-weight: 900;
-          transition: 0.3s;
+          transition: 0.25s;
         }
 
         .button:hover {
           background: #111827;
+          transform: translateY(-2px);
         }
 
         .empty {
-          background: ${
-            darkMode ? "#1e293b" : "white"
-          };
-          padding: 24px;
-          border-radius: 20px;
+          background: ${darkMode ? "#1e293b" : "white"};
+          padding: 28px;
+          border-radius: 24px;
           text-align: center;
-          font-weight: 800;
+          font-weight: 900;
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
         }
 
         .floatingButtons {
@@ -433,7 +496,8 @@ export default function ProductsSearchClient({
           justify-content: center;
           text-decoration: none;
           font-size: 26px;
-          box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+          box-shadow: 0 12px 26px rgba(0,0,0,0.22);
+          transition: 0.25s;
         }
 
         .whatsappButton {
@@ -445,16 +509,35 @@ export default function ProductsSearchClient({
           color: white;
         }
 
+        .whatsappButton:hover,
+        .phoneButton:hover {
+          transform: scale(1.08) translateY(-2px);
+        }
+
         @media (max-width: 1100px) {
           .grid {
             grid-template-columns: repeat(2, 1fr);
           }
+
+          .coverTitle {
+            font-size: 58px;
+          }
         }
 
         @media (max-width: 700px) {
+          .navbar {
+            padding: 14px;
+          }
+
           .navInner {
             flex-direction: column;
             align-items: flex-start;
+            border-radius: 24px;
+            padding: 14px;
+          }
+
+          .logo {
+            font-size: 20px;
           }
 
           .navRight {
@@ -467,31 +550,82 @@ export default function ProductsSearchClient({
             width: 100%;
           }
 
+          .navLinks {
+            gap: 12px;
+          }
+
+          .navLinks a {
+            font-size: 14px;
+          }
+
           .cover {
-            height: 420px;
+            height: 470px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+          }
+
+          .overlay {
+            padding-top: 145px;
           }
 
           .coverTitle {
             font-size: 40px;
+            letter-spacing: -1.4px;
+          }
+
+          .coverText {
+            font-size: 18px;
+          }
+
+          .container {
+            padding: 38px 14px 60px;
           }
 
           .sectionTitle {
-            font-size: 30px;
-          }
-
-          .grid {
-            grid-template-columns: 1fr;
+            font-size: 29px;
           }
 
           .productsActions {
             width: 100%;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+          }
+
+          .filterWrapper {
+            width: 100%;
+          }
+
+          .filterButton {
+            width: 100%;
           }
 
           .filterMenu {
             left: 0;
             right: auto;
+            width: 100%;
+          }
+
+          .count {
+            width: 100%;
+            text-align: center;
+          }
+
+          .grid {
+            grid-template-columns: 1fr;
+            gap: 18px;
+          }
+
+          .imageBox {
+            height: 190px;
+          }
+
+          .smallText {
+            min-height: auto;
+          }
+
+          .floatingButtons {
+            right: 12px;
+            bottom: 12px;
           }
         }
       `}</style>
@@ -512,6 +646,7 @@ export default function ProductsSearchClient({
             <button
               className="themeButton"
               onClick={() => setDarkMode(!darkMode)}
+              aria-label="Toggle dark mode"
             >
               {darkMode ? "☀️" : "🌙"}
             </button>
@@ -530,13 +665,9 @@ export default function ProductsSearchClient({
         <img src="/cover.jpg" alt="KONSTRUKCIA.GE cover" />
 
         <div className="overlay">
-          <div className="coverBadge">
-            სამშენებლო პროდუქცია
-          </div>
+          <div className="coverBadge">სამშენებლო პროდუქცია</div>
 
-          <h1 className="coverTitle">
-            KONSTRUKCIA.GE
-          </h1>
+          <h1 className="coverTitle">KONSTRUKCIA.GE</h1>
 
           <p className="coverText">
             ხარისხიანი სამშენებლო მასალები ერთ სივრცეში
@@ -551,9 +682,7 @@ export default function ProductsSearchClient({
       <section id="products" className="container">
         <div className="sectionTop">
           <div>
-            <h2 className="sectionTitle">
-              პოპულარული პროდუქტები
-            </h2>
+            <h2 className="sectionTitle">პოპულარული პროდუქტები</h2>
 
             <p className="sectionText">
               მოძებნე პროდუქტი და შეუკვეთე მარტივად
@@ -564,9 +693,7 @@ export default function ProductsSearchClient({
             <div className="filterWrapper">
               <button
                 className="filterButton"
-                onClick={() =>
-                  setShowFilter(!showFilter)
-                }
+                onClick={() => setShowFilter(!showFilter)}
               >
                 ფილტრი
               </button>
@@ -575,9 +702,7 @@ export default function ProductsSearchClient({
                 <div className="filterMenu">
                   <button
                     className={`filterItem ${
-                      selectedCategory === "ყველა"
-                        ? "activeFilter"
-                        : ""
+                      selectedCategory === "ყველა" ? "activeFilter" : ""
                     }`}
                     onClick={() => {
                       setSelectedCategory("ყველა")
@@ -589,15 +714,12 @@ export default function ProductsSearchClient({
 
                   <button
                     className={`filterItem ${
-                      selectedCategory ===
-                      "სამშენებლო ტექნიკა"
+                      selectedCategory === "სამშენებლო ტექნიკა"
                         ? "activeFilter"
                         : ""
                     }`}
                     onClick={() => {
-                      setSelectedCategory(
-                        "სამშენებლო ტექნიკა"
-                      )
+                      setSelectedCategory("სამშენებლო ტექნიკა")
                       setShowFilter(false)
                     }}
                   >
@@ -606,15 +728,12 @@ export default function ProductsSearchClient({
 
                   <button
                     className={`filterItem ${
-                      selectedCategory ===
-                      "სამშენებლო ინვენტარი"
+                      selectedCategory === "სამშენებლო ინვენტარი"
                         ? "activeFilter"
                         : ""
                     }`}
                     onClick={() => {
-                      setSelectedCategory(
-                        "სამშენებლო ინვენტარი"
-                      )
+                      setSelectedCategory("სამშენებლო ინვენტარი")
                       setShowFilter(false)
                     }}
                   >
@@ -625,55 +744,44 @@ export default function ProductsSearchClient({
             </div>
 
             <div className="count">
-              პროდუქტების რაოდენობა:{" "}
-              {filteredProducts.length}
+              პროდუქტების რაოდენობა: {filteredProducts.length}
             </div>
           </div>
         </div>
 
         {products.length === 0 ? (
-          <div className="empty">
-            პროდუქტი ვერ მოიძებნა Firebase-ში
-          </div>
+          <div className="empty">პროდუქტი ვერ მოიძებნა Firebase-ში</div>
         ) : filteredProducts.length === 0 ? (
-          <div className="empty">
-            პროდუქტი ვერ მოიძებნა
-          </div>
+          <div className="empty">პროდუქტი ვერ მოიძებნა</div>
         ) : (
           <div className="grid">
             {filteredProducts.map((product) => (
               <div key={product.id} className="card">
                 <div className="imageBox">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                  />
+                  <img src={product.image} alt={product.name} />
 
-                  <div className="priceBadge">
-                    ₾ {product.price}
-                  </div>
+                  <div className="stockBadge">მარაგშია</div>
+
+                  <div className="priceBadge">₾ {product.price}</div>
                 </div>
 
                 <div className="content">
-                  <div className="category">
-                    {product.category}
-                  </div>
+                  <div className="category">{product.category}</div>
 
-                  <h2 className="name">
-                    {product.name}
-                  </h2>
+                  <h2 className="name">{product.name}</h2>
+
+                  <div className="rating">★★★★★ 5.0</div>
 
                   <p className="smallText">
                     {product.description ||
                       "აღწერა დროებით არ არის დამატებული"}
                   </p>
 
-                  <a
-                    className="button"
-                    href="/calculator"
-                  >
-                    კალკულატორში დამატება
-                  </a>
+                  <div className="buttonRow">
+                    <a className="button" href="/calculator">
+                      კალკულატორში დამატება
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
@@ -690,10 +798,7 @@ export default function ProductsSearchClient({
           💬
         </a>
 
-        <a
-          className="phoneButton"
-          href="tel:596614614"
-        >
+        <a className="phoneButton" href="tel:596614614">
           📞
         </a>
       </div>
