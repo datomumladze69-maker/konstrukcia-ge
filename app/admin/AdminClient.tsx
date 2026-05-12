@@ -39,7 +39,8 @@ type Order = {
   createdAt: string
 }
 
-const ADMIN_PASSWORD = "admin123"
+const ADMIN_PASSWORD = 
+process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "IIkvartalshi24"
 
 const emptyProduct = {
   id: "",

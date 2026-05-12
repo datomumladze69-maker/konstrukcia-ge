@@ -13,8 +13,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title:
-    "KONSTRUKCIA.GE | სამშენებლო ტექნიკის და ინვენტარის გაქირავება",
+  metadataBase: new URL("https://konstrukcia-ge.vercel.app"),
+
+  title: {
+    default:
+      "KONSTRUKCIA.GE | სამშენებლო ტექნიკის და ინვენტარის გაქირავება",
+    template: "%s | KONSTRUKCIA.GE",
+  },
 
   description:
     "სამშენებლო ტექნიკის, ხარაჩოს, დოკის, ლამინატის, მეშალკის და სამშენებლო ინვენტარის გაქირავება საქართველოში.",
@@ -54,14 +59,23 @@ export const metadata: Metadata = {
     "KONSTRUKCIA.GE",
   ],
 
+  authors: [{ name: "KONSTRUKCIA.GE" }],
+
+  creator: "KONSTRUKCIA.GE",
+
+  publisher: "KONSTRUKCIA.GE",
+
+  alternates: {
+    canonical: "/",
+  },
+
   openGraph: {
-    title:
-      "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
+    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
 
     description:
       "ხარაჩოს, დოკის, მეშალკის, ლამინატის და სამშენებლო ტექნიკის გაქირავება.",
 
-    url: "https://konstrukcia-ge.vercel.app",
+    url: "/",
 
     siteName: "KONSTRUKCIA.GE",
 
@@ -74,7 +88,7 @@ export const metadata: Metadata = {
         url: "/cover.jpg",
         width: 1200,
         height: 630,
-        alt: "KONSTRUKCIA.GE",
+        alt: "KONSTRUKCIA.GE სამშენებლო ტექნიკის გაქირავება",
       },
     ],
   },
@@ -82,8 +96,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
 
-    title:
-      "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
+    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
 
     description:
       "სამშენებლო ტექნიკის და ინვენტარის გაქირავება საქართველოში.",
@@ -94,7 +107,16 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+
+  category: "construction",
 }
 
 export default function RootLayout({
@@ -107,9 +129,7 @@ export default function RootLayout({
       lang="ka"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   )
 }
