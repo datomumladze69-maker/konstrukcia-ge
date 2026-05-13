@@ -50,6 +50,7 @@ const emptyProduct = {
 
 export default function AdminClient() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [checkingLogin, setCheckingLogin] = useState(true)
   const [password, setPassword] = useState("")
   const [loginError, setLoginError] = useState("")
 
@@ -58,23 +59,38 @@ export default function AdminClient() {
   const [newProduct, setNewProduct] =
     useState<ProductForm>(emptyProduct)
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState("")
   const [creating, setCreating] = useState(false)
   const [deleting, setDeleting] = useState("")
 
   useEffect(() => {
-    const savedLogin = localStorage.getItem("admin-login")
+    async function checkLogin() {
+      try {
+        const response = await fetch("/api/admin-check", {
+          method: "GET",
+        })
 
-    if (savedLogin === "true") {
-      setIsLoggedIn(true)
+        const data = await response.json()
+
+        if (data.isLoggedIn) {
+          setIsLoggedIn(true)
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setCheckingLogin(false)
+      }
     }
+
+    checkLogin()
   }, [])
 
   useEffect(() => {
     if (!isLoggedIn) return
 
     async function loadData() {
+      setLoading(true)
       await loadProducts()
       await loadOrders()
       setLoading(false)
@@ -84,104 +100,93 @@ export default function AdminClient() {
   }, [isLoggedIn])
 
   async function loadProducts() {
-    const snapshot = await getDocs(
-      collection(db, "products")
-    )
+    const snapshot = await getDocs(collection(db, "products"))
 
-    const loadedProducts: ProductForm[] =
-      snapshot.docs.map((document) => {
-        const data = document.data()
+    const loadedProducts: ProductForm[] = snapshot.docs.map((document) => {
+      const data = document.data()
 
-        return {
-          id: document.id,
-          name: String(data.name || ""),
-          price: String(data.price || ""),
-          image: String(data.image || ""),
-          description: String(data.description || ""),
-          category: String(data.category || ""),
-        }
-      })
+      return {
+        id: document.id,
+        name: String(data.name || ""),
+        price: String(data.price || ""),
+        image: String(data.image || ""),
+        description: String(data.description || ""),
+        category: String(data.category || ""),
+      }
+    })
 
     setProducts(loadedProducts)
   }
 
   async function loadOrders() {
-    const snapshot = await getDocs(
-      collection(db, "orders")
-    )
+    const snapshot = await getDocs(collection(db, "orders"))
 
-    const loadedOrders: Order[] =
-      snapshot.docs.map((document) => {
-        const data = document.data()
+    const loadedOrders: Order[] = snapshot.docs.map((document) => {
+      const data = document.data()
 
-        let createdAt = "თარიღი არ არის"
+      let createdAt = "თარიღი არ არის"
 
-        if (data.createdAt?.seconds) {
-          createdAt = new Date(
-            data.createdAt.seconds * 1000
-          ).toLocaleString("ka-GE")
-        }
+      if (data.createdAt?.seconds) {
+        createdAt = new Date(
+          data.createdAt.seconds * 1000
+        ).toLocaleString("ka-GE")
+      }
 
-        return {
-          id: document.id,
-          items: Array.isArray(data.items)
-            ? data.items
-            : [],
-          totalPrice: Number(data.totalPrice || 0),
-          totalQuantity: Number(data.totalQuantity || 0),
-          status: String(data.status || "new"),
-          createdAt,
-        }
-      })
+      return {
+        id: document.id,
+        items: Array.isArray(data.items) ? data.items : [],
+        totalPrice: Number(data.totalPrice || 0),
+        totalQuantity: Number(data.totalQuantity || 0),
+        status: String(data.status || "new"),
+        createdAt,
+      }
+    })
 
     setOrders(loadedOrders.reverse())
   }
 
- async function login() {
-  setLoginError("")
+  async function login() {
+    setLoginError("")
 
-  try {
-    const response = await fetch("/api/admin-login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        password,
-      }),
-    })
+    try {
+      const response = await fetch("/api/admin-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password,
+        }),
+      })
 
-    const data = await response.json()
+      const data = await response.json()
 
-    if (!response.ok) {
-      setLoginError(
-        data.message || "პაროლი არასწორია"
-      )
+      if (!response.ok) {
+        setLoginError(data.message || "პაროლი არასწორია")
+        return
+      }
 
-      return
+      setIsLoggedIn(true)
+      setPassword("")
+    } catch (error) {
+      console.error(error)
+      setLoginError("დაფიქსირდა შეცდომა")
     }
-
-    setIsLoggedIn(true)
-
-    localStorage.setItem(
-      "admin-login",
-      "true"
-    )
-
-    setPassword("")
-  } catch (error) {
-    console.error(error)
-
-    setLoginError(
-      "დაფიქსირდა შეცდომა"
-    )
   }
-}
 
-  function logout() {
-    localStorage.removeItem("admin-login")
-    setIsLoggedIn(false)
-    setPassword("")
+  async function logout() {
+    try {
+      await fetch("/api/admin-logout", {
+        method: "POST",
+      })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoggedIn(false)
+      setPassword("")
+      setProducts([])
+      setOrders([])
+    }
   }
 
   function updateField(
@@ -191,9 +196,7 @@ export default function AdminClient() {
   ) {
     setProducts((currentProducts) =>
       currentProducts.map((product) =>
-        product.id === id
-          ? { ...product, [field]: value }
-          : product
+        product.id === id ? { ...product, [field]: value } : product
       )
     )
   }
@@ -224,26 +227,20 @@ export default function AdminClient() {
   }
 
   async function createNewProduct() {
-    if (
-      !newProduct.name ||
-      !newProduct.price
-    ) {
+    if (!newProduct.name || !newProduct.price) {
       alert("შეავსე სახელი და ფასი")
       return
     }
 
     setCreating(true)
 
-    const newDoc = await addDoc(
-      collection(db, "products"),
-      {
-        name: newProduct.name,
-        price: newProduct.price,
-        image: newProduct.image,
-        description: newProduct.description,
-        category: newProduct.category,
-      }
-    )
+    const newDoc = await addDoc(collection(db, "products"), {
+      name: newProduct.name,
+      price: newProduct.price,
+      image: newProduct.image,
+      description: newProduct.description,
+      category: newProduct.category,
+    })
 
     setProducts((currentProducts) => [
       ...currentProducts,
@@ -273,20 +270,28 @@ export default function AdminClient() {
 
     setDeleting(productId)
 
-    await deleteDoc(
-      doc(db, "products", productId)
-    )
+    await deleteDoc(doc(db, "products", productId))
 
     setProducts((currentProducts) =>
-      currentProducts.filter(
-        (product) =>
-          product.id !== productId
-      )
+      currentProducts.filter((product) => product.id !== productId)
     )
 
     setDeleting("")
 
     alert("პროდუქტი წაიშალა")
+  }
+
+  if (checkingLogin) {
+    return (
+      <main
+        style={{
+          padding: 40,
+          fontFamily: "Arial",
+        }}
+      >
+        მოწმდება შესვლა...
+      </main>
+    )
   }
 
   if (!isLoggedIn) {
@@ -375,24 +380,16 @@ export default function AdminClient() {
           <div className="loginBox">
             <h1 className="loginTitle">Admin Login</h1>
 
-            <p className="loginText">
-              შეიყვანე პაროლი
-            </p>
+            <p className="loginText">შეიყვანე პაროლი</p>
 
-            {loginError ? (
-              <p className="error">
-                {loginError}
-              </p>
-            ) : null}
+            {loginError ? <p className="error">{loginError}</p> : null}
 
             <input
               className="loginInput"
               type="password"
               placeholder="პაროლი"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   login()
@@ -400,10 +397,7 @@ export default function AdminClient() {
               }}
             />
 
-            <button
-              className="loginButton"
-              onClick={login}
-            >
+            <button className="loginButton" onClick={login}>
               შესვლა
             </button>
           </div>
@@ -776,24 +770,15 @@ export default function AdminClient() {
       <div className="page">
         <header className="navbar">
           <div className="navInner">
-            <a
-              className="logo"
-              href="/"
-            >
+            <a className="logo" href="/">
               KONSTRUKCIA.GE Admin
             </a>
 
             <nav className="navLinks">
               <a href="/">მთავარი</a>
+              <a href="/calculator">კალკულატორი</a>
 
-              <a href="/calculator">
-                კალკულატორი
-              </a>
-
-              <button
-                className="logoutButton"
-                onClick={logout}
-              >
+              <button className="logoutButton" onClick={logout}>
                 გასვლა
               </button>
             </nav>
@@ -802,19 +787,13 @@ export default function AdminClient() {
 
         <div className="container">
           <section className="hero">
-            <h1 className="title">
-              Admin Panel
-            </h1>
+            <h1 className="title">Admin Panel</h1>
 
-            <p className="subtitle">
-              პროდუქტების მართვა
-            </p>
+            <p className="subtitle">პროდუქტების მართვა</p>
           </section>
 
           <section className="addBox">
-            <h2 className="addTitle">
-              ახალი პროდუქტის დამატება
-            </h2>
+            <h2 className="addTitle">ახალი პროდუქტის დამატება</h2>
 
             <div className="addGrid">
               <input
@@ -822,10 +801,7 @@ export default function AdminClient() {
                 placeholder="სახელი"
                 value={newProduct.name}
                 onChange={(e) =>
-                  updateNewProduct(
-                    "name",
-                    e.target.value
-                  )
+                  updateNewProduct("name", e.target.value)
                 }
               />
 
@@ -834,10 +810,7 @@ export default function AdminClient() {
                 placeholder="ფასი"
                 value={newProduct.price}
                 onChange={(e) =>
-                  updateNewProduct(
-                    "price",
-                    e.target.value
-                  )
+                  updateNewProduct("price", e.target.value)
                 }
               />
 
@@ -846,10 +819,7 @@ export default function AdminClient() {
                 placeholder="/image.jpg"
                 value={newProduct.image}
                 onChange={(e) =>
-                  updateNewProduct(
-                    "image",
-                    e.target.value
-                  )
+                  updateNewProduct("image", e.target.value)
                 }
               />
 
@@ -858,10 +828,7 @@ export default function AdminClient() {
                 placeholder="კატეგორია"
                 value={newProduct.category}
                 onChange={(e) =>
-                  updateNewProduct(
-                    "category",
-                    e.target.value
-                  )
+                  updateNewProduct("category", e.target.value)
                 }
               />
 
@@ -870,10 +837,7 @@ export default function AdminClient() {
                 placeholder="აღწერა"
                 value={newProduct.description}
                 onChange={(e) =>
-                  updateNewProduct(
-                    "description",
-                    e.target.value
-                  )
+                  updateNewProduct("description", e.target.value)
                 }
               />
 
@@ -882,108 +846,72 @@ export default function AdminClient() {
                 disabled={creating}
                 onClick={createNewProduct}
               >
-                {creating
-                  ? "ემატება..."
-                  : "პროდუქტის დამატება"}
+                {creating ? "ემატება..." : "პროდუქტის დამატება"}
               </button>
             </div>
           </section>
 
           <section className="grid">
             {products.map((product) => (
-              <div
-                key={product.id}
-                className="card"
-              >
-                <h2 className="cardTitle">
-                  {product.name}
-                </h2>
+              <div key={product.id} className="card">
+                <h2 className="cardTitle">{product.name}</h2>
 
                 <div className="preview">
                   {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                    />
+                    <img src={product.image} alt={product.name} />
                   ) : null}
                 </div>
 
                 <div className="field">
-                  <label className="label">
-                    სახელი
-                  </label>
+                  <label className="label">სახელი</label>
 
                   <input
                     className="input"
                     value={product.name}
                     onChange={(e) =>
-                      updateField(
-                        product.id,
-                        "name",
-                        e.target.value
-                      )
+                      updateField(product.id, "name", e.target.value)
                     }
                   />
                 </div>
 
                 <div className="field">
-                  <label className="label">
-                    ფასი
-                  </label>
+                  <label className="label">ფასი</label>
 
                   <input
                     className="input"
                     value={product.price}
                     onChange={(e) =>
-                      updateField(
-                        product.id,
-                        "price",
-                        e.target.value
-                      )
+                      updateField(product.id, "price", e.target.value)
                     }
                   />
                 </div>
 
                 <div className="field">
-                  <label className="label">
-                    ფოტო
-                  </label>
+                  <label className="label">ფოტო</label>
 
                   <input
                     className="input"
                     value={product.image}
                     onChange={(e) =>
-                      updateField(
-                        product.id,
-                        "image",
-                        e.target.value
-                      )
+                      updateField(product.id, "image", e.target.value)
                     }
                   />
                 </div>
 
                 <div className="field">
-                  <label className="label">
-                    კატეგორია
-                  </label>
+                  <label className="label">კატეგორია</label>
 
                   <input
                     className="input"
                     value={product.category}
                     onChange={(e) =>
-                      updateField(
-                        product.id,
-                        "category",
-                        e.target.value
-                      )
+                      updateField(product.id, "category", e.target.value)
                     }
                   />
                 </div>
 
                 <div className="field">
-                  <label className="label">
-                    აღწერა
-                  </label>
+                  <label className="label">აღწერა</label>
 
                   <textarea
                     className="textarea"
@@ -1002,30 +930,19 @@ export default function AdminClient() {
                   <button
                     className="saveButton"
                     disabled={saving === product.id}
-                    onClick={() =>
-                      saveProduct(product)
-                    }
+                    onClick={() => saveProduct(product)}
                   >
-                    {saving === product.id
-                      ? "ინახება..."
-                      : "შენახვა"}
+                    {saving === product.id ? "ინახება..." : "შენახვა"}
                   </button>
 
                   <button
                     className="deleteButton"
-                    disabled={
-                      deleting === product.id
-                    }
+                    disabled={deleting === product.id}
                     onClick={() =>
-                      deleteProduct(
-                        product.id,
-                        product.name
-                      )
+                      deleteProduct(product.id, product.name)
                     }
                   >
-                    {deleting === product.id
-                      ? "იშლება..."
-                      : "წაშლა"}
+                    {deleting === product.id ? "იშლება..." : "წაშლა"}
                   </button>
                 </div>
               </div>
@@ -1034,49 +951,30 @@ export default function AdminClient() {
 
           <section className="ordersBox">
             <div className="ordersHeader">
-              <h2 className="ordersTitle">
-                შეკვეთების ისტორია
-              </h2>
+              <h2 className="ordersTitle">შეკვეთების ისტორია</h2>
 
-              <button
-                className="refreshButton"
-                onClick={loadOrders}
-              >
+              <button className="refreshButton" onClick={loadOrders}>
                 განახლება
               </button>
             </div>
 
             {orders.length === 0 ? (
-              <div className="emptyOrders">
-                ჯერ შეკვეთები არ არის
-              </div>
+              <div className="emptyOrders">ჯერ შეკვეთები არ არის</div>
             ) : (
               <div className="ordersGrid">
                 {orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="orderCard"
-                  >
+                  <div key={order.id} className="orderCard">
                     <div className="orderTop">
-                      <div className="orderDate">
-                        {order.createdAt}
-                      </div>
+                      <div className="orderDate">{order.createdAt}</div>
 
                       <div className="orderStatus">
-                        {order.status === "new"
-                          ? "ახალი"
-                          : order.status}
+                        {order.status === "new" ? "ახალი" : order.status}
                       </div>
                     </div>
 
                     <div className="orderSummary">
-                      <div>
-                        პროდუქტები: {order.totalQuantity} ცალი
-                      </div>
-
-                      <div>
-                        ჯამი: ₾ {order.totalPrice}
-                      </div>
+                      <div>პროდუქტები: {order.totalQuantity} ცალი</div>
+                      <div>ჯამი: ₾ {order.totalPrice}</div>
                     </div>
 
                     <div className="orderItems">
@@ -1085,12 +983,11 @@ export default function AdminClient() {
                           key={`${order.id}-${item.id}-${index}`}
                           className="orderItem"
                         >
-                          <p className="orderItemName">
-                            {item.name}
-                          </p>
+                          <p className="orderItemName">{item.name}</p>
 
                           <p className="orderItemText">
-                            {item.quantity} ცალი × ₾ {item.price} = ₾ {item.total}
+                            {item.quantity} ცალი × ₾ {item.price} = ₾{" "}
+                            {item.total}
                           </p>
                         </div>
                       ))}
