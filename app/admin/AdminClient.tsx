@@ -39,9 +39,6 @@ type Order = {
   createdAt: string
 }
 
-const ADMIN_PASSWORD = 
-process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "IIkvartalshi24"
-
 const emptyProduct = {
   id: "",
   name: "",
@@ -140,15 +137,46 @@ export default function AdminClient() {
     setOrders(loadedOrders.reverse())
   }
 
-  function login() {
-    if (password === ADMIN_PASSWORD) {
-      setIsLoggedIn(true)
-      localStorage.setItem("admin-login", "true")
-      setLoginError("")
-    } else {
-      setLoginError("პაროლი არასწორია")
+ async function login() {
+  setLoginError("")
+
+  try {
+    const response = await fetch("/api/admin-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      setLoginError(
+        data.message || "პაროლი არასწორია"
+      )
+
+      return
     }
+
+    setIsLoggedIn(true)
+
+    localStorage.setItem(
+      "admin-login",
+      "true"
+    )
+
+    setPassword("")
+  } catch (error) {
+    console.error(error)
+
+    setLoginError(
+      "დაფიქსირდა შეცდომა"
+    )
   }
+}
 
   function logout() {
     localStorage.removeItem("admin-login")
