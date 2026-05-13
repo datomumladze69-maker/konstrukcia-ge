@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Product = {
   id: string
@@ -22,6 +22,9 @@ export default function ProductsSearchClient({
   const [selectedCategory, setSelectedCategory] = useState("ყველა")
   const [showFilter, setShowFilter] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
+  const [videoReady, setVideoReady] = useState(false)
+
+  const videoSectionRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("dark-mode")
@@ -34,6 +37,31 @@ export default function ProductsSearchClient({
   useEffect(() => {
     localStorage.setItem("dark-mode", darkMode.toString())
   }, [darkMode])
+
+  useEffect(() => {
+    if (!videoSectionRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+
+        if (entry.isIntersecting) {
+          setVideoReady(true)
+          observer.disconnect()
+        }
+      },
+      {
+        rootMargin: "260px",
+        threshold: 0.1,
+      }
+    )
+
+    observer.observe(videoSectionRef.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const filteredProducts = products.filter((product) => {
     const searchText = search.toLowerCase().trim()
@@ -792,11 +820,17 @@ export default function ProductsSearchClient({
             </button>
 
             <nav className="navLinks">
-  <Link href="/" prefetch={false}>მთავარი</Link>
-  <Link href="/#products" prefetch={false}>პროდუქტები</Link>
-  <Link href="/calculator" prefetch={false}>კალკულატორი</Link>
-  <a href="tel:596614614">კონტაქტი</a>
-</nav>
+              <Link href="/" prefetch={false}>
+                მთავარი
+              </Link>
+              <Link href="/#products" prefetch={false}>
+                პროდუქტები
+              </Link>
+              <Link href="/calculator" prefetch={false}>
+                კალკულატორი
+              </Link>
+              <a href="tel:596614614">კონტაქტი</a>
+            </nav>
           </div>
         </div>
       </header>
@@ -822,26 +856,30 @@ export default function ProductsSearchClient({
           </p>
 
           <Link
-  className="coverButton"
-  href="/#products"
-  prefetch={false}
->
-  პროდუქციის ნახვა
-</Link>
+            className="coverButton"
+            href="/#products"
+            prefetch={false}
+          >
+            პროდუქციის ნახვა
+          </Link>
         </div>
       </section>
 
-      <section className="cinematicSection reveal">
+      <section ref={videoSectionRef} className="cinematicSection reveal">
         <div className="cinematicBox">
           <video
+            key={videoReady ? "video-ready" : "video-poster"}
             className="cinematicVideo"
-            autoPlay
+            autoPlay={videoReady}
             muted
             loop
             playsInline
+            preload={videoReady ? "metadata" : "none"}
             poster="/cover.jpg"
           >
-            <source src="/construction-hero.mp4" type="video/mp4" />
+            {videoReady && (
+              <source src="/construction-hero.mp4" type="video/mp4" />
+            )}
           </video>
 
           <div className="cinematicShade" />
@@ -963,12 +1001,12 @@ export default function ProductsSearchClient({
 
                   <div className="buttonRow">
                     <Link
-  className="button"
-  href="/calculator"
-  prefetch={false}
->
-  კალკულატორში დამატება
-</Link>
+                      className="button"
+                      href="/calculator"
+                      prefetch={false}
+                    >
+                      კალკულატორში დამატება
+                    </Link>
                   </div>
                 </div>
               </div>
