@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { addDoc, collection, serverTimestamp } from "firebase/firestore/lite"
 import { db } from "@/lib/firebase"
@@ -796,16 +797,16 @@ export default function CalculatorClient({
 
         <header className="navbar">
           <div className="navInner">
-            <a className="logo" href="/">
-              KONSTRUKCIA.GE
-            </a>
+            <Link className="logo" href="/" prefetch={false}>
+  KONSTRUKCIA.GE
+</Link>
 
-            <nav className="navLinks">
-              <a href="/">მთავარი</a>
-              <a href="/#products">პროდუქტები</a>
-              <a href="/calculator">კალკულატორი</a>
-              <a href="tel:596614614">კონტაქტი</a>
-            </nav>
+<nav className="navLinks">
+  <Link href="/" prefetch={false}>მთავარი</Link>
+  <Link href="/#products" prefetch={false}>პროდუქტები</Link>
+  <Link href="/calculator" prefetch={false}>კალკულატორი</Link>
+  <a href="tel:596614614">კონტაქტი</a>
+</nav>
           </div>
         </header>
 

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 
 type Product = {
@@ -791,11 +792,11 @@ export default function ProductsSearchClient({
             </button>
 
             <nav className="navLinks">
-              <a href="/">მთავარი</a>
-              <a href="#products">პროდუქტები</a>
-              <a href="/calculator">კალკულატორი</a>
-              <a href="tel:596614614">კონტაქტი</a>
-            </nav>
+  <Link href="/" prefetch={false}>მთავარი</Link>
+  <Link href="/#products" prefetch={false}>პროდუქტები</Link>
+  <Link href="/calculator" prefetch={false}>კალკულატორი</Link>
+  <a href="tel:596614614">კონტაქტი</a>
+</nav>
           </div>
         </div>
       </header>
@@ -820,9 +821,13 @@ export default function ProductsSearchClient({
             ხარისხიანი სამშენებლო მასალები ერთ სივრცეში
           </p>
 
-          <a className="coverButton" href="#products">
-            პროდუქციის ნახვა
-          </a>
+          <Link
+  className="coverButton"
+  href="/#products"
+  prefetch={false}
+>
+  პროდუქციის ნახვა
+</Link>
         </div>
       </section>
 
@@ -957,9 +962,13 @@ export default function ProductsSearchClient({
                   </p>
 
                   <div className="buttonRow">
-                    <a className="button" href="/calculator">
-                      კალკულატორში დამატება
-                    </a>
+                    <Link
+  className="button"
+  href="/calculator"
+  prefetch={false}
+>
+  კალკულატორში დამატება
+</Link>
                   </div>
                 </div>
               </div>
