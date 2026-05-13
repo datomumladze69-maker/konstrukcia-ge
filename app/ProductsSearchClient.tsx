@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useState } from "react"
 
 type Product = {
@@ -368,17 +369,13 @@ export default function ProductsSearchClient({
           background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.34));
         }
 
-        .imageBox img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-          display: block;
-        }
+.imageBox :global(img) {
+  transition: transform 0.4s ease;
+}
 
-        .card:hover .imageBox img {
-          transform: scale(1.08);
-        }
+       .card:hover .imageBox :global(img) {
+  transform: scale(1.08);
+}
 
         .priceBadge {
           position: absolute;
@@ -662,7 +659,15 @@ export default function ProductsSearchClient({
       </header>
 
       <section className="cover">
-        <img src="/cover.jpg" alt="KONSTRUKCIA.GE cover" />
+        <Image
+  src="/cover.jpg"
+  alt="KONSTRUKCIA.GE cover"
+  fill
+  priority
+  style={{
+    objectFit: "cover",
+  }}
+/>
 
         <div className="overlay">
           <div className="coverBadge">სამშენებლო პროდუქცია</div>
@@ -758,7 +763,15 @@ export default function ProductsSearchClient({
             {filteredProducts.map((product) => (
               <div key={product.id} className="card">
                 <div className="imageBox">
-                  <img src={product.image} alt={product.name} />
+                  <Image
+  src={product.image}
+  alt={product.name}
+  fill
+  sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw"
+  style={{
+    objectFit: "cover",
+  }}
+/>
 
                   <div className="stockBadge">მარაგშია</div>
 
