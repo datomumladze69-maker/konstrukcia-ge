@@ -448,6 +448,10 @@ export default function ProductsSearchClient({
 
         .button {
           display: inline-block;
+          min-height: 52px;
+display: flex;
+align-items: center;
+justify-content: center;
           width: 100%;
           text-align: center;
           background: #f97316;
@@ -528,6 +532,7 @@ export default function ProductsSearchClient({
 
           .navInner {
             flex-direction: column;
+            gap: 16px;
             align-items: flex-start;
             border-radius: 24px;
             padding: 14px;
@@ -566,12 +571,13 @@ export default function ProductsSearchClient({
           }
 
           .coverTitle {
-            font-size: 40px;
+            font-size: 34px;
             letter-spacing: -1.4px;
           }
 
           .coverText {
-            font-size: 18px;
+             font-size: 16px;
+  line-height: 1.6;
           }
 
           .container {
@@ -613,7 +619,7 @@ export default function ProductsSearchClient({
           }
 
           .imageBox {
-            height: 190px;
+            height: 220px;
           }
 
           .smallText {
