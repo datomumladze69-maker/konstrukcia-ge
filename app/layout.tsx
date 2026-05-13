@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
+const siteUrl = "https://konstrukcia-ge.vercel.app"
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://konstrukcia-ge.vercel.app"),
+  metadataBase: new URL(siteUrl),
 
   title: {
     default:
@@ -55,17 +57,18 @@ export const metadata: Metadata = {
     "სახლის ასაშენებელი მასალა",
     "სამშენებლო მასალა",
     "construction rental",
-    "construction equipment",
-    "scaffolding rental",
+    "construction equipment rental Georgia",
+    "scaffolding rental Georgia",
     "KONSTRUKCIA.GE",
   ],
 
   authors: [{ name: "KONSTRUKCIA.GE" }],
   creator: "KONSTRUKCIA.GE",
   publisher: "KONSTRUKCIA.GE",
+  applicationName: "KONSTRUKCIA.GE",
 
   alternates: {
-    canonical: "/",
+    canonical: siteUrl,
   },
 
   verification: {
@@ -73,19 +76,19 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
+    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის და ინვენტარის გაქირავება",
     description:
-      "ხარაჩოს, დოკის, მეშალკის, ლამინატის და სამშენებლო ტექნიკის გაქირავება.",
-    url: "/",
+      "ხარაჩოს, დოკის, მეშალკის, ლამინატის, დანგრატის და სამშენებლო ინვენტარის გაქირავება საქართველოში.",
+    url: siteUrl,
     siteName: "KONSTRUKCIA.GE",
     locale: "ka_GE",
     type: "website",
     images: [
       {
-        url: "/cover.jpg",
+        url: `${siteUrl}/cover.jpg`,
         width: 1200,
         height: 630,
-        alt: "KONSTRUKCIA.GE სამშენებლო ტექნიკის გაქირავება",
+        alt: "KONSTRUKCIA.GE სამშენებლო ტექნიკის და ინვენტარის გაქირავება",
       },
     ],
   },
@@ -94,8 +97,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
     description:
-      "სამშენებლო ტექნიკის და ინვენტარის გაქირავება საქართველოში.",
-    images: ["/cover.jpg"],
+      "სამშენებლო ტექნიკის, ხარაჩოს, დოკის, ლამინატის და ინვენტარის გაქირავება საქართველოში.",
+    images: [`${siteUrl}/cover.jpg`],
   },
 
   robots: {
