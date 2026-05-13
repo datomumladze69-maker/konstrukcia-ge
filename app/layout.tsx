@@ -25,88 +25,9 @@ export const metadata: Metadata = {
   description:
     "სამშენებლო ტექნიკის, ხარაჩოს, დოკის, ლამინატის, მეშალკის და სამშენებლო ინვენტარის გაქირავება საქართველოში.",
 
-  keywords: [
-    "გასაქირავებელი ხარაჩო",
-    "გასაქირავებელი დოკი",
-    "გასაქირავებელი ლამინატი",
-    "გასაქირავებელი დანგრატი",
-    "გასაქირავებელი მეშალკა",
-    "მეშალკა ქირით",
-    "ხარაჩო ქირით",
-    "დოკი ქირით",
-    "ლამინატი ქირით",
-    "დანგრატი ქირით",
-    "სამშენებლო მასალის გაქირავება",
-    "სამშენებლო ტექნიკის გაქირავება",
-    "სამშენებლო დანადგარების გაქირავება",
-    "სამშენებლო ინვენტარის გაქირავება",
-    "სამშენებლო მასალები",
-    "სამშენებლო ტექნიკა",
-    "სამშენებლო დანგრატი",
-    "სამშენებლო ლამინატი",
-    "სამშენებლო მეშალკა",
-    "სამშენებლო ხარაჩო",
-    "სამშენებლო დოკი",
-    "დოკი",
-    "ხარაჩო",
-    "მეშალკა",
-    "ლამინატი",
-    "დანგრატი",
-    "სახლის ასაშენებელი მასალა",
-    "სამშენებლო მასალა",
-    "construction rental",
-    "construction equipment",
-    "scaffolding rental",
-    "KONSTRUKCIA.GE",
-  ],
-
-  authors: [{ name: "KONSTRUKCIA.GE" }],
-  creator: "KONSTRUKCIA.GE",
-  publisher: "KONSTRUKCIA.GE",
-
-  alternates: {
-    canonical: "/",
+  verification: {
+    google: "YckTo6t5ArwpUKUIYclMhQzHiK3k2wQiSBuwYIKqSqQ",
   },
-
-  openGraph: {
-    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
-    description:
-      "ხარაჩოს, დოკის, მეშალკის, ლამინატის და სამშენებლო ტექნიკის გაქირავება.",
-    url: "/",
-    siteName: "KONSTRUKCIA.GE",
-    locale: "ka_GE",
-    type: "website",
-    images: [
-      {
-        url: "/cover.jpg",
-        width: 1200,
-        height: 630,
-        alt: "KONSTRUKCIA.GE სამშენებლო ტექნიკის გაქირავება",
-      },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
-    description:
-      "სამშენებლო ტექნიკის და ინვენტარის გაქირავება საქართველოში.",
-    images: ["/cover.jpg"],
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
-
-  category: "construction",
 }
 
 export default function RootLayout({
