@@ -49,6 +49,29 @@ export default function ProductsSearchClient({
     return matchesSearch && matchesCategory
   })
 
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal")
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible")
+          }
+        })
+      },
+      {
+        threshold: 0.16,
+      }
+    )
+
+    elements.forEach((element) => observer.observe(element))
+
+    return () => {
+      elements.forEach((element) => observer.unobserve(element))
+    }
+  }, [filteredProducts.length])
+
   return (
     <div className={darkMode ? "dark page" : "page"}>
       <style>{`
@@ -75,6 +98,22 @@ export default function ProductsSearchClient({
             radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 32%),
             linear-gradient(180deg, #020617 0%, #0f172a 100%);
           color: white;
+        }
+
+        .reveal {
+          opacity: 0;
+          transform: translateY(34px) scale(0.98);
+          transition:
+            opacity 0.75s ease,
+            transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 0.28s ease,
+            border-color 0.28s ease;
+          will-change: opacity, transform;
+        }
+
+        .reveal.visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
 
         .navbar {
@@ -232,6 +271,78 @@ export default function ProductsSearchClient({
           background: #fff7ed;
         }
 
+        .cinematicSection {
+          max-width: 1200px;
+          margin: 54px auto 0;
+          padding: 0 20px;
+        }
+
+        .cinematicBox {
+          position: relative;
+          height: 440px;
+          border-radius: 34px;
+          overflow: hidden;
+          background: #111827;
+          box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+          border: 1px solid ${darkMode ? "#334155" : "rgba(226,232,240,0.95)"};
+        }
+
+        .cinematicVideo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transform: scale(1.03);
+          filter: saturate(1.08) contrast(1.06);
+        }
+
+        .cinematicShade {
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 72% 30%, rgba(249,115,22,0.2), transparent 25%),
+            linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.1), rgba(0,0,0,0.34)),
+            linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.35));
+          pointer-events: none;
+        }
+
+        .cinematicLight {
+          position: absolute;
+          top: -30%;
+          left: -55%;
+          width: 55%;
+          height: 160%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.08),
+            transparent
+          );
+          transform: rotate(18deg);
+          animation: lightMove 7s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        @keyframes lightMove {
+          0% {
+            left: -55%;
+            opacity: 0;
+          }
+
+          30% {
+            opacity: 1;
+          }
+
+          70% {
+            opacity: 1;
+          }
+
+          100% {
+            left: 105%;
+            opacity: 0;
+          }
+        }
+
         .container {
           max-width: 1200px;
           margin: 0 auto;
@@ -344,13 +455,17 @@ export default function ProductsSearchClient({
           border-radius: 26px;
           overflow: hidden;
           box-shadow: 0 14px 34px rgba(15,23,42,0.09);
-          transition: 0.28s;
+          transition:
+            opacity 0.75s ease,
+            transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 0.28s ease,
+            border-color 0.28s ease;
           border: 1px solid ${darkMode ? "#334155" : "rgba(226,232,240,0.95)"};
           position: relative;
         }
 
         .card:hover {
-          transform: translateY(-8px);
+          transform: translateY(-8px) scale(1.01);
           box-shadow: 0 24px 52px rgba(15,23,42,0.18);
           border-color: rgba(249, 115, 22, 0.38);
         }
@@ -369,13 +484,13 @@ export default function ProductsSearchClient({
           background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.34));
         }
 
-.imageBox :global(img) {
-  transition: transform 0.4s ease;
-}
+        .imageBox :global(img) {
+          transition: transform 0.4s ease;
+        }
 
-       .card:hover .imageBox :global(img) {
-  transform: scale(1.08);
-}
+        .card:hover .imageBox :global(img) {
+          transform: scale(1.08);
+        }
 
         .priceBadge {
           position: absolute;
@@ -447,11 +562,10 @@ export default function ProductsSearchClient({
         }
 
         .button {
-          display: inline-block;
+          display: flex;
           min-height: 52px;
-display: flex;
-align-items: center;
-justify-content: center;
+          align-items: center;
+          justify-content: center;
           width: 100%;
           text-align: center;
           background: #f97316;
@@ -515,6 +629,18 @@ justify-content: center;
           transform: scale(1.08) translateY(-2px);
         }
 
+        @media (prefers-reduced-motion: reduce) {
+          .reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+
+          .cinematicLight {
+            animation: none;
+          }
+        }
+
         @media (max-width: 1100px) {
           .grid {
             grid-template-columns: repeat(2, 1fr);
@@ -576,8 +702,18 @@ justify-content: center;
           }
 
           .coverText {
-             font-size: 16px;
-  line-height: 1.6;
+            font-size: 16px;
+            line-height: 1.6;
+          }
+
+          .cinematicSection {
+            margin-top: 34px;
+            padding: 0 14px;
+          }
+
+          .cinematicBox {
+            height: 300px;
+            border-radius: 24px;
           }
 
           .container {
@@ -666,14 +802,14 @@ justify-content: center;
 
       <section className="cover">
         <Image
-  src="/cover.jpg"
-  alt="KONSTRUKCIA.GE cover"
-  fill
-  priority
-  style={{
-    objectFit: "cover",
-  }}
-/>
+          src="/cover.jpg"
+          alt="KONSTRUKCIA.GE cover"
+          fill
+          priority
+          style={{
+            objectFit: "cover",
+          }}
+        />
 
         <div className="overlay">
           <div className="coverBadge">სამშენებლო პროდუქცია</div>
@@ -690,8 +826,26 @@ justify-content: center;
         </div>
       </section>
 
+      <section className="cinematicSection reveal">
+        <div className="cinematicBox">
+          <video
+            className="cinematicVideo"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/cover.jpg"
+          >
+            <source src="/construction-hero.mp4" type="video/mp4" />
+          </video>
+
+          <div className="cinematicShade" />
+          <div className="cinematicLight" />
+        </div>
+      </section>
+
       <section id="products" className="container">
-        <div className="sectionTop">
+        <div className="sectionTop reveal">
           <div>
             <h2 className="sectionTitle">პოპულარული პროდუქტები</h2>
 
@@ -761,23 +915,29 @@ justify-content: center;
         </div>
 
         {products.length === 0 ? (
-          <div className="empty">პროდუქტი ვერ მოიძებნა Firebase-ში</div>
+          <div className="empty reveal">პროდუქტი ვერ მოიძებნა Firebase-ში</div>
         ) : filteredProducts.length === 0 ? (
-          <div className="empty">პროდუქტი ვერ მოიძებნა</div>
+          <div className="empty reveal">პროდუქტი ვერ მოიძებნა</div>
         ) : (
           <div className="grid">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="card">
+            {filteredProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className="card reveal"
+                style={{
+                  transitionDelay: `${Math.min(index * 80, 480)}ms`,
+                }}
+              >
                 <div className="imageBox">
                   <Image
-  src={product.image}
-  alt={product.name}
-  fill
-  sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw"
-  style={{
-    objectFit: "cover",
-  }}
-/>
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
 
                   <div className="stockBadge">მარაგშია</div>
 
