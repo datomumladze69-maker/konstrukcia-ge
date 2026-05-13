@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -60,9 +61,7 @@ export const metadata: Metadata = {
   ],
 
   authors: [{ name: "KONSTRUKCIA.GE" }],
-
   creator: "KONSTRUKCIA.GE",
-
   publisher: "KONSTRUKCIA.GE",
 
   alternates: {
@@ -71,18 +70,12 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
-
     description:
       "ხარაჩოს, დოკის, მეშალკის, ლამინატის და სამშენებლო ტექნიკის გაქირავება.",
-
     url: "/",
-
     siteName: "KONSTRUKCIA.GE",
-
     locale: "ka_GE",
-
     type: "website",
-
     images: [
       {
         url: "/cover.jpg",
@@ -95,12 +88,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-
     title: "KONSTRUKCIA.GE | სამშენებლო ტექნიკის გაქირავება",
-
     description:
       "სამშენებლო ტექნიკის და ინვენტარის გაქირავება საქართველოში.",
-
     images: ["/cover.jpg"],
   },
 
@@ -129,7 +119,10 @@ export default function RootLayout({
       lang="ka"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
