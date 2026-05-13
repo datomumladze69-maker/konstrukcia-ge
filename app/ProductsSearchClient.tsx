@@ -804,12 +804,22 @@ export default function ProductsSearchClient({
 
           <div className="navRight">
             <input
-              className="navSearchInput"
-              type="text"
-              placeholder="მოძებნე..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+  className="navSearchInput"
+  type="text"
+  placeholder="მოძებნე..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+
+      document.getElementById("products")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+    }
+  }}
+/>
 
             <button
               className="themeButton"

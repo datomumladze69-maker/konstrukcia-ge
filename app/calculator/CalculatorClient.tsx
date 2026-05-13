@@ -29,6 +29,7 @@ export default function CalculatorClient({
   const [searchText, setSearchText] = useState("")
   const [ordering, setOrdering] = useState(false)
   const [toast, setToast] = useState("")
+  const [darkMode, setDarkMode] = useState(false)
 
   const [selectedCategory, setSelectedCategory] =
     useState("ყველა")
@@ -50,6 +51,13 @@ export default function CalculatorClient({
       setItems(JSON.parse(savedItems))
     }
   }, [])
+  useEffect(() => {
+  const savedTheme = localStorage.getItem("dark-mode")
+
+  if (savedTheme === "true") {
+    setDarkMode(true)
+  }
+}, [])
 
   useEffect(() => {
     localStorage.setItem("calculator-items", JSON.stringify(items))
@@ -256,6 +264,10 @@ export default function CalculatorClient({
           color: #111827;
           padding-bottom: 50px;
         }
+          .dark {
+  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  color: white;
+}
 
         .toast {
           position: fixed;
@@ -323,7 +335,7 @@ export default function CalculatorClient({
         }
 
         .hero {
-          background: white;
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 28px;
           padding: 32px;
           margin-bottom: 28px;
@@ -339,12 +351,12 @@ export default function CalculatorClient({
 
         .subtitle {
           margin: 0;
-          color: #6b7280;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           font-size: 17px;
         }
 
         .searchBox {
-          background: white;
+  background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 24px;
           padding: 20px;
           margin-bottom: 26px;
@@ -361,11 +373,11 @@ export default function CalculatorClient({
         }
 
         .searchLabel {
-          display: block;
-          font-size: 15px;
-          font-weight: 900;
-          color: #374151;
-        }
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: ${darkMode ? "#e2e8f0" : "#374151"};
+}
 
         .filterWrapper {
           position: relative;
@@ -418,14 +430,19 @@ export default function CalculatorClient({
         }
 
         .searchInput {
-          width: 100%;
-          height: 52px;
-          border: 1px solid #d1d5db;
-          border-radius: 16px;
-          padding: 0 16px;
-          font-size: 16px;
-          outline: none;
-        }
+  width: 100%;
+  height: 52px;
+  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+  border-radius: 16px;
+  padding: 0 16px;
+  font-size: 16px;
+  outline: none;
+  background: ${darkMode ? "#020617" : "white"};
+  color: ${darkMode ? "white" : "#111827"};
+}
+  .searchInput::placeholder {
+  color: ${darkMode ? "#94a3b8" : "#6b7280"};
+}
 
         .searchInput:focus {
           border-color: #f97316;
@@ -433,7 +450,7 @@ export default function CalculatorClient({
 
         .searchInfo {
           margin: 10px 0 0;
-          color: #6b7280;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           font-size: 14px;
           font-weight: 700;
         }
@@ -452,17 +469,17 @@ export default function CalculatorClient({
         }
 
         .noProducts {
-          background: white;
+           background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 22px;
           padding: 26px;
           text-align: center;
-          color: #6b7280;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           font-weight: 800;
           box-shadow: 0 12px 28px rgba(0,0,0,0.08);
         }
 
         .card {
-          background: white;
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 22px;
           overflow: hidden;
           box-shadow: 0 12px 28px rgba(0,0,0,0.08);
@@ -524,15 +541,20 @@ export default function CalculatorClient({
         }
 
         .quantityInput {
-          width: 100%;
-          height: 46px;
-          border: 1px solid #d1d5db;
-          border-radius: 14px;
-          padding: 0 14px;
-          font-size: 16px;
-          margin-bottom: 12px;
-          outline: none;
-        }
+  width: 100%;
+  height: 46px;
+  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+  border-radius: 14px;
+  padding: 0 14px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+  background: ${darkMode ? "#020617" : "white"};
+  color: ${darkMode ? "white" : "#111827"};
+}
+  .quantityInput::placeholder {
+  color: ${darkMode ? "#94a3b8" : "#6b7280"};
+}
 
         .quantityInput:focus {
           border-color: #f97316;
@@ -556,7 +578,7 @@ export default function CalculatorClient({
         }
 
         .calculatorBox {
-          background: white;
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 24px;
           padding: 20px;
           box-shadow: 0 12px 30px rgba(0,0,0,0.1);
@@ -572,18 +594,19 @@ export default function CalculatorClient({
 
         .calculatorText {
           margin: 0 0 18px;
-          color: #6b7280;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
           font-size: 14px;
         }
 
         .empty {
-          background: #f9fafb;
-          border-radius: 18px;
-          padding: 18px;
-          text-align: center;
-          color: #6b7280;
-          font-size: 15px;
-        }
+  background: ${darkMode ? "#020617" : "#f9fafb"};
+  border: 1px solid ${darkMode ? "#334155" : "transparent"};
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  color: ${darkMode ? "#cbd5e1" : "#6b7280"};
+  font-size: 15px;
+}
 
         .cartItems {
           display: flex;
@@ -593,7 +616,7 @@ export default function CalculatorClient({
         }
 
         .cartItem {
-          border: 1px solid #e5e7eb;
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
           border-radius: 16px;
           padding: 12px;
         }
@@ -647,15 +670,17 @@ export default function CalculatorClient({
         }
 
         .cartQuantityInput {
-          width: 62px;
-          height: 32px;
-          border: 1px solid #d1d5db;
-          border-radius: 10px;
-          text-align: center;
-          font-size: 15px;
-          font-weight: 900;
-          outline: none;
-        }
+  width: 62px;
+  height: 32px;
+  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 900;
+  outline: none;
+  background: ${darkMode ? "#020617" : "white"};
+  color: ${darkMode ? "white" : "#111827"};
+}
 
         .cartQuantityInput:focus {
           border-color: #f97316;
@@ -666,7 +691,7 @@ export default function CalculatorClient({
         }
 
         .summary {
-          border-top: 1px solid #e5e7eb;
+          border-top: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
           padding-top: 16px;
         }
 
@@ -788,7 +813,7 @@ export default function CalculatorClient({
         }
       `}</style>
 
-      <div className="page">
+      <div className={darkMode ? "page dark" : "page"}>
         {toast && (
           <div className="toast">
             {toast}
