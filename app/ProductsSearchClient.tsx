@@ -25,6 +25,7 @@ export default function ProductsSearchClient({
   const [videoReady, setVideoReady] = useState(false)
 
   const videoSectionRef = useRef<HTMLElement | null>(null)
+  const [statsVisible, setStatsVisible] = useState(false)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("dark-mode")
@@ -78,6 +79,27 @@ export default function ProductsSearchClient({
     return matchesSearch && matchesCategory
   })
 
+  useEffect(() => {
+  const statsSection = document.getElementById("stats-section")
+
+  if (!statsSection) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        setStatsVisible(true)
+        observer.disconnect()
+      }
+    },
+    {
+      threshold: 0.3,
+    }
+  )
+
+  observer.observe(statsSection)
+
+  return () => observer.disconnect()
+}, [])
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal")
 
@@ -620,6 +642,63 @@ export default function ProductsSearchClient({
           border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
         }
 
+        .statsSection {
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 0 20px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.statCard {
+  background: ${darkMode ? "#1e293b" : "rgba(255,255,255,0.96)"};
+  border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
+  border-radius: 28px;
+  padding: 34px 22px;
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(15,23,42,0.08);
+  transition: 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(249,115,22,0.45);
+  box-shadow: 0 24px 46px rgba(15,23,42,0.14);
+}
+
+.statNumber {
+  font-size: 52px;
+  font-weight: 900;
+  color: #f97316;
+  line-height: 1;
+}
+
+.statLabel {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: ${darkMode ? "#cbd5e1" : "#6b7280"};
+}
+
+@media (max-width: 900px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statNumber {
+    font-size: 42px;
+  }
+}
         .floatingButtons {
           position: fixed;
           right: 18px;
@@ -1025,6 +1104,52 @@ export default function ProductsSearchClient({
         )}
       </section>
 
+<section
+  id="stats-section"
+  className="statsSection reveal"
+>
+  <div className="statsGrid">
+    <div className="statCard">
+      <div className="statNumber">
+        {statsVisible ? "500+" : "0"}
+      </div>
+
+      <div className="statLabel">
+        კმაყოფილი კლიენტი
+      </div>
+    </div>
+
+    <div className="statCard">
+      <div className="statNumber">
+        {statsVisible ? "1200+" : "0"}
+      </div>
+
+      <div className="statLabel">
+        შესრულებული შეკვეთა
+      </div>
+    </div>
+
+    <div className="statCard">
+      <div className="statNumber">
+        {statsVisible ? "24/7" : "0"}
+      </div>
+
+      <div className="statLabel">
+        მხარდაჭერა
+      </div>
+    </div>
+
+    <div className="statCard">
+      <div className="statNumber">
+        {statsVisible ? "5★" : "0"}
+      </div>
+
+      <div className="statLabel">
+        მომხმარებლის შეფასება
+      </div>
+    </div>
+  </div>
+</section>
       <div className="floatingButtons">
         <a
           className="whatsappButton"
