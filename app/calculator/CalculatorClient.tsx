@@ -31,6 +31,11 @@ export default function CalculatorClient({
   const [selectedCategory, setSelectedCategory] = useState("ყველა")
   const [showFilter, setShowFilter] = useState(false)
 
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [customerName, setCustomerName] = useState("")
+  const [customerPhone, setCustomerPhone] = useState("")
+  const [customerComment, setCustomerComment] = useState("")
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -169,6 +174,68 @@ export default function CalculatorClient({
     showToast("კალკულატორი გასუფთავდა")
   }
 
+  function openOrderModal() {
+    if (items.length === 0) {
+      showToast("ჯერ დაამატე პროდუქტი კალკულატორში")
+      return
+    }
+
+    setShowOrderModal(true)
+  }
+
+  async function submitOrderForm() {
+    if (items.length === 0) {
+      showToast("ჯერ დაამატე პროდუქტი კალკულატორში")
+      return
+    }
+
+    if (!customerName.trim()) {
+      showToast("ჩაწერე სახელი")
+      return
+    }
+
+    if (!customerPhone.trim()) {
+      showToast("ჩაწერე ტელეფონის ნომერი")
+      return
+    }
+
+    setOrdering(true)
+
+    try {
+      await addDoc(collection(db, "orders"), {
+        customerName: customerName.trim(),
+        customerPhone: customerPhone.trim(),
+        customerComment: customerComment.trim(),
+        source: "calculator_modal",
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+          total: item.price * item.quantity,
+        })),
+        totalPrice,
+        totalQuantity,
+        status: "new",
+        createdAt: serverTimestamp(),
+      })
+
+      setCustomerName("")
+      setCustomerPhone("")
+      setCustomerComment("")
+      setShowOrderModal(false)
+
+      showToast("შეკვეთა მიღებულია")
+    } catch (error) {
+      console.error(error)
+      showToast("შეკვეთის გაგზავნისას მოხდა შეცდომა")
+    } finally {
+      setOrdering(false)
+    }
+  }
+
   const filteredProducts = products.filter((product) => {
     const search = searchText.toLowerCase().trim()
 
@@ -221,6 +288,7 @@ export default function CalculatorClient({
         })),
         totalPrice,
         totalQuantity,
+        source: "whatsapp",
         status: "new",
         createdAt: serverTimestamp(),
       })
@@ -701,12 +769,28 @@ export default function CalculatorClient({
           margin-top: 14px;
         }
 
-        .whatsappOrder {
+        .orderModalButton {
           display: block;
           width: 100%;
           text-align: center;
           text-decoration: none;
           margin-top: 16px;
+          border: none;
+          border-radius: 14px;
+          padding: 13px;
+          background: #f97316;
+          color: white;
+          font-weight: 900;
+          cursor: pointer;
+          font-size: 15px;
+        }
+
+        .whatsappOrder {
+          display: block;
+          width: 100%;
+          text-align: center;
+          text-decoration: none;
+          margin-top: 10px;
           border: none;
           border-radius: 14px;
           padding: 13px;
@@ -717,7 +801,8 @@ export default function CalculatorClient({
           font-size: 15px;
         }
 
-        .whatsappOrder:disabled {
+        .whatsappOrder:disabled,
+        .orderModalButton:disabled {
           opacity: 0.65;
           cursor: not-allowed;
         }
@@ -748,20 +833,166 @@ export default function CalculatorClient({
           cursor: pointer;
         }
 
+        .modalOverlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(2, 6, 23, 0.72);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 18px;
+          z-index: 9998;
+        }
+
+        .modalBox {
+          width: 100%;
+          max-width: 520px;
+          max-height: 92vh;
+          overflow-y: auto;
+          background: ${darkMode ? "#1e293b" : "white"};
+          color: ${darkMode ? "white" : "#111827"};
+          border-radius: 26px;
+          padding: 24px;
+          box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
+        }
+
+        .modalTop {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 16px;
+          margin-bottom: 18px;
+        }
+
+        .modalTitle {
+          margin: 0 0 6px;
+          font-size: 25px;
+          font-weight: 900;
+        }
+
+        .modalSubtitle {
+          margin: 0;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
+          font-size: 14px;
+          font-weight: 700;
+        }
+
+        .modalClose {
+          width: 34px;
+          height: 34px;
+          border: none;
+          border-radius: 999px;
+          background: #fee2e2;
+          color: #dc2626;
+          font-size: 20px;
+          font-weight: 900;
+          cursor: pointer;
+          flex: 0 0 auto;
+        }
+
+        .modalSummary {
+          background: ${darkMode ? "#020617" : "#f9fafb"};
+          border: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
+          border-radius: 18px;
+          padding: 14px;
+          margin-bottom: 16px;
+        }
+
+        .modalSummaryTitle {
+          margin: 0 0 10px;
+          font-size: 15px;
+          font-weight: 900;
+        }
+
+        .modalProductRow {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 8px 0;
+          border-bottom: 1px solid ${darkMode ? "#334155" : "#e5e7eb"};
+          font-size: 14px;
+          font-weight: 800;
+        }
+
+        .modalProductRow:last-child {
+          border-bottom: none;
+        }
+
+        .modalTotal {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          margin-top: 12px;
+          font-size: 18px;
+          font-weight: 900;
+        }
+
+        .modalForm {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .modalInput,
+        .modalTextarea {
+          width: 100%;
+          border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+          border-radius: 14px;
+          padding: 13px 14px;
+          font-size: 15px;
+          outline: none;
+          background: ${darkMode ? "#020617" : "white"};
+          color: ${darkMode ? "white" : "#111827"};
+          font-family: Arial, sans-serif;
+        }
+
+        .modalInput::placeholder,
+        .modalTextarea::placeholder {
+          color: ${darkMode ? "#94a3b8" : "#6b7280"};
+        }
+
+        .modalInput:focus,
+        .modalTextarea:focus {
+          border-color: #f97316;
+        }
+
+        .modalTextarea {
+          min-height: 92px;
+          resize: vertical;
+        }
+
+        .modalSubmit {
+          width: 100%;
+          border: none;
+          border-radius: 14px;
+          padding: 14px;
+          background: #f97316;
+          color: white;
+          font-size: 15px;
+          font-weight: 900;
+          cursor: pointer;
+        }
+
+        .modalSubmit:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+        }
+
         @media (max-width: 1000px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+          .layout {
+            grid-template-columns: 1fr;
+          }
 
-  .productsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+          .productsGrid {
+            grid-template-columns: repeat(2, 1fr);
+          }
 
-  .calculatorBox {
-    position: static;
-    order: -1;
-  }
-}
+          .calculatorBox {
+            position: static;
+            order: -1;
+          }
+        }
 
         @media (max-width: 650px) {
           .toast {
@@ -804,11 +1035,94 @@ export default function CalculatorClient({
             flex-direction: column;
             align-items: flex-start;
           }
+
+          .modalBox {
+            padding: 20px;
+            border-radius: 22px;
+          }
+
+          .modalTitle {
+            font-size: 22px;
+          }
         }
       `}</style>
 
       <div className={darkMode ? "page dark" : "page"}>
         {toast && <div className="toast">{toast}</div>}
+
+        {showOrderModal && (
+          <div className="modalOverlay">
+            <div className="modalBox">
+              <div className="modalTop">
+                <div>
+                  <h2 className="modalTitle">შეკვეთის გაფორმება</h2>
+                  <p className="modalSubtitle">
+                    შეავსე მონაცემები და შეკვეთა შეინახება სისტემაში.
+                  </p>
+                </div>
+
+                <button
+                  className="modalClose"
+                  onClick={() => setShowOrderModal(false)}
+                  disabled={ordering}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="modalSummary">
+                <p className="modalSummaryTitle">არჩეული პროდუქტები</p>
+
+                {items.map((item) => (
+                  <div key={item.id} className="modalProductRow">
+                    <span>
+                      {item.name} × {item.quantity}
+                    </span>
+                    <span>₾ {item.price * item.quantity}</span>
+                  </div>
+                ))}
+
+                <div className="modalTotal">
+                  <span>სულ</span>
+                  <span>₾ {totalPrice}</span>
+                </div>
+              </div>
+
+              <div className="modalForm">
+                <input
+                  className="modalInput"
+                  type="text"
+                  placeholder="სახელი"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                />
+
+                <input
+                  className="modalInput"
+                  type="tel"
+                  placeholder="ტელეფონის ნომერი"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                />
+
+                <textarea
+                  className="modalTextarea"
+                  placeholder="კომენტარი, მისამართი ან დამატებითი ინფორმაცია"
+                  value={customerComment}
+                  onChange={(e) => setCustomerComment(e.target.value)}
+                />
+
+                <button
+                  className="modalSubmit"
+                  onClick={submitOrderForm}
+                  disabled={ordering}
+                >
+                  {ordering ? "იგზავნება..." : "შეკვეთის გაგზავნა"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <header className="navbar">
           <div className="navInner">
@@ -1024,6 +1338,14 @@ export default function CalculatorClient({
                       <span>სულ</span>
                       <span>₾ {totalPrice}</span>
                     </div>
+
+                    <button
+                      className="orderModalButton"
+                      onClick={openOrderModal}
+                      disabled={ordering}
+                    >
+                      შეკვეთის გაფორმება
+                    </button>
 
                     <button
                       className="whatsappOrder"
