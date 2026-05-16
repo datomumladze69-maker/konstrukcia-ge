@@ -219,6 +219,24 @@ export default function ProductsSearchClient({
           outline: none;
         }
 
+        .navPhoneLink {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 900;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 999px;
+  padding: 12px 16px;
+  white-space: nowrap;
+  transition: 0.25s;
+}
+
+.navPhoneLink:hover {
+  background: #f97316;
+  transform: translateY(-2px);
+}
+
         .navSearchInput::placeholder {
           color: rgba(255,255,255,0.78);
         }
@@ -882,8 +900,12 @@ export default function ProductsSearchClient({
           <div className="logo">KONSTRUKCIA.GE</div>
 
           <div className="navRight">
-            <input
-  className="navSearchInput"
+  <a className="navPhoneLink" href="tel:596614614">
+    📞 596 614 614
+  </a>
+
+  <input
+    className="navSearchInput"
   type="text"
   placeholder="მოძებნე..."
   value={search}
