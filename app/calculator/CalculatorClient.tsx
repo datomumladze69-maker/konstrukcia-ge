@@ -23,18 +23,21 @@ export default function CalculatorClient({
   products: Product[]
 }) {
   const [items, setItems] = useState<CartItem[]>([])
-  const [quantities, setQuantities] = useState<{
-    [key: string]: string
-  }>({})
+  const [quantities, setQuantities] = useState<{ [key: string]: string }>({})
   const [searchText, setSearchText] = useState("")
   const [ordering, setOrdering] = useState(false)
   const [toast, setToast] = useState("")
   const [darkMode, setDarkMode] = useState(false)
-
-  const [selectedCategory, setSelectedCategory] =
-    useState("ყველა")
-
+  const [selectedCategory, setSelectedCategory] = useState("ყველა")
   const [showFilter, setShowFilter] = useState(false)
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    })
+  }, [])
 
   function showToast(message: string) {
     setToast(message)
@@ -51,13 +54,14 @@ export default function CalculatorClient({
       setItems(JSON.parse(savedItems))
     }
   }, [])
-  useEffect(() => {
-  const savedTheme = localStorage.getItem("dark-mode")
 
-  if (savedTheme === "true") {
-    setDarkMode(true)
-  }
-}, [])
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("dark-mode")
+
+    if (savedTheme === "true") {
+      setDarkMode(true)
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem("calculator-items", JSON.stringify(items))
@@ -74,9 +78,7 @@ export default function CalculatorClient({
     const quantity = Math.max(1, Number(quantities[product.id]) || 1)
 
     setItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.id === product.id
-      )
+      const existingItem = currentItems.find((item) => item.id === product.id)
 
       if (existingItem) {
         return currentItems.map((item) =>
@@ -125,9 +127,7 @@ export default function CalculatorClient({
     if (value === "") {
       setItems((currentItems) =>
         currentItems.map((item) =>
-          item.id === productId
-            ? { ...item, quantity: 0 }
-            : item
+          item.id === productId ? { ...item, quantity: 0 } : item
         )
       )
 
@@ -140,9 +140,7 @@ export default function CalculatorClient({
 
     setItems((currentItems) =>
       currentItems.map((item) =>
-        item.id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
+        item.id === productId ? { ...item, quantity: newQuantity } : item
       )
     )
   }
@@ -179,9 +177,7 @@ export default function CalculatorClient({
       product.category.toLowerCase().includes(search)
 
     const matchesCategory =
-      selectedCategory === "ყველა"
-        ? true
-        : product.category === selectedCategory
+      selectedCategory === "ყველა" ? true : product.category === selectedCategory
 
     return matchesSearch && matchesCategory
   })
@@ -191,10 +187,7 @@ export default function CalculatorClient({
     0
   )
 
-  const totalQuantity = items.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  )
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
   const whatsappText = encodeURIComponent(
     `გამარჯობა, მინდა შეკვეთა:\n\n${items
@@ -234,10 +227,7 @@ export default function CalculatorClient({
 
       showToast("შეკვეთა შეინახა და WhatsApp იხსნება")
 
-      window.open(
-        `https://wa.me/995598357294?text=${whatsappText}`,
-        "_blank"
-      )
+      window.open(`https://wa.me/995598357294?text=${whatsappText}`, "_blank")
     } catch (error) {
       console.error(error)
       showToast("შეკვეთის შენახვისას მოხდა შეცდომა")
@@ -264,10 +254,11 @@ export default function CalculatorClient({
           color: #111827;
           padding-bottom: 50px;
         }
-          .dark {
-  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-  color: white;
-}
+
+        .dark {
+          background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+          color: white;
+        }
 
         .toast {
           position: fixed;
@@ -356,7 +347,7 @@ export default function CalculatorClient({
         }
 
         .searchBox {
-  background: ${darkMode ? "#1e293b" : "white"};
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 24px;
           padding: 20px;
           margin-bottom: 26px;
@@ -373,11 +364,11 @@ export default function CalculatorClient({
         }
 
         .searchLabel {
-  display: block;
-  font-size: 15px;
-  font-weight: 900;
-  color: ${darkMode ? "#e2e8f0" : "#374151"};
-}
+          display: block;
+          font-size: 15px;
+          font-weight: 900;
+          color: ${darkMode ? "#e2e8f0" : "#374151"};
+        }
 
         .filterWrapper {
           position: relative;
@@ -430,19 +421,20 @@ export default function CalculatorClient({
         }
 
         .searchInput {
-  width: 100%;
-  height: 52px;
-  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
-  border-radius: 16px;
-  padding: 0 16px;
-  font-size: 16px;
-  outline: none;
-  background: ${darkMode ? "#020617" : "white"};
-  color: ${darkMode ? "white" : "#111827"};
-}
-  .searchInput::placeholder {
-  color: ${darkMode ? "#94a3b8" : "#6b7280"};
-}
+          width: 100%;
+          height: 52px;
+          border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+          border-radius: 16px;
+          padding: 0 16px;
+          font-size: 16px;
+          outline: none;
+          background: ${darkMode ? "#020617" : "white"};
+          color: ${darkMode ? "white" : "#111827"};
+        }
+
+        .searchInput::placeholder {
+          color: ${darkMode ? "#94a3b8" : "#6b7280"};
+        }
 
         .searchInput:focus {
           border-color: #f97316;
@@ -469,7 +461,7 @@ export default function CalculatorClient({
         }
 
         .noProducts {
-           background: ${darkMode ? "#1e293b" : "white"};
+          background: ${darkMode ? "#1e293b" : "white"};
           border-radius: 22px;
           padding: 26px;
           text-align: center;
@@ -541,20 +533,21 @@ export default function CalculatorClient({
         }
 
         .quantityInput {
-  width: 100%;
-  height: 46px;
-  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
-  border-radius: 14px;
-  padding: 0 14px;
-  font-size: 16px;
-  margin-bottom: 12px;
-  outline: none;
-  background: ${darkMode ? "#020617" : "white"};
-  color: ${darkMode ? "white" : "#111827"};
-}
-  .quantityInput::placeholder {
-  color: ${darkMode ? "#94a3b8" : "#6b7280"};
-}
+          width: 100%;
+          height: 46px;
+          border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+          border-radius: 14px;
+          padding: 0 14px;
+          font-size: 16px;
+          margin-bottom: 12px;
+          outline: none;
+          background: ${darkMode ? "#020617" : "white"};
+          color: ${darkMode ? "white" : "#111827"};
+        }
+
+        .quantityInput::placeholder {
+          color: ${darkMode ? "#94a3b8" : "#6b7280"};
+        }
 
         .quantityInput:focus {
           border-color: #f97316;
@@ -599,14 +592,14 @@ export default function CalculatorClient({
         }
 
         .empty {
-  background: ${darkMode ? "#020617" : "#f9fafb"};
-  border: 1px solid ${darkMode ? "#334155" : "transparent"};
-  border-radius: 18px;
-  padding: 18px;
-  text-align: center;
-  color: ${darkMode ? "#cbd5e1" : "#6b7280"};
-  font-size: 15px;
-}
+          background: ${darkMode ? "#020617" : "#f9fafb"};
+          border: 1px solid ${darkMode ? "#334155" : "transparent"};
+          border-radius: 18px;
+          padding: 18px;
+          text-align: center;
+          color: ${darkMode ? "#cbd5e1" : "#6b7280"};
+          font-size: 15px;
+        }
 
         .cartItems {
           display: flex;
@@ -670,17 +663,17 @@ export default function CalculatorClient({
         }
 
         .cartQuantityInput {
-  width: 62px;
-  height: 32px;
-  border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
-  border-radius: 10px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 900;
-  outline: none;
-  background: ${darkMode ? "#020617" : "white"};
-  color: ${darkMode ? "white" : "#111827"};
-}
+          width: 62px;
+          height: 32px;
+          border: 1px solid ${darkMode ? "#334155" : "#d1d5db"};
+          border-radius: 10px;
+          text-align: center;
+          font-size: 15px;
+          font-weight: 900;
+          outline: none;
+          background: ${darkMode ? "#020617" : "white"};
+          color: ${darkMode ? "white" : "#111827"};
+        }
 
         .cartQuantityInput:focus {
           border-color: #f97316;
@@ -814,24 +807,26 @@ export default function CalculatorClient({
       `}</style>
 
       <div className={darkMode ? "page dark" : "page"}>
-        {toast && (
-          <div className="toast">
-            {toast}
-          </div>
-        )}
+        {toast && <div className="toast">{toast}</div>}
 
         <header className="navbar">
           <div className="navInner">
             <Link className="logo" href="/" prefetch={false}>
-  KONSTRUKCIA.GE
-</Link>
+              KONSTRUKCIA.GE
+            </Link>
 
-<nav className="navLinks">
-  <Link href="/" prefetch={false}>მთავარი</Link>
-  <Link href="/#products" prefetch={false}>პროდუქტები</Link>
-  <Link href="/calculator" prefetch={false}>კალკულატორი</Link>
-  <a href="tel:596614614">კონტაქტი</a>
-</nav>
+            <nav className="navLinks">
+              <Link href="/" prefetch={false}>
+                მთავარი
+              </Link>
+              <Link href="/#products" prefetch={false}>
+                პროდუქტები
+              </Link>
+              <Link href="/calculator" prefetch={false}>
+                კალკულატორი
+              </Link>
+              <a href="tel:596614614">კონტაქტი</a>
+            </nav>
           </div>
         </header>
 
@@ -846,16 +841,12 @@ export default function CalculatorClient({
 
           <section className="searchBox">
             <div className="topActions">
-              <label className="searchLabel">
-                პროდუქტის ძებნა
-              </label>
+              <label className="searchLabel">პროდუქტის ძებნა</label>
 
               <div className="filterWrapper">
                 <button
                   className="filterButton"
-                  onClick={() =>
-                    setShowFilter(!showFilter)
-                  }
+                  onClick={() => setShowFilter(!showFilter)}
                 >
                   ფილტრი
                 </button>
@@ -864,9 +855,7 @@ export default function CalculatorClient({
                   <div className="filterMenu">
                     <button
                       className={`filterItem ${
-                        selectedCategory === "ყველა"
-                          ? "activeFilter"
-                          : ""
+                        selectedCategory === "ყველა" ? "activeFilter" : ""
                       }`}
                       onClick={() => {
                         setSelectedCategory("ყველა")
@@ -878,15 +867,12 @@ export default function CalculatorClient({
 
                     <button
                       className={`filterItem ${
-                        selectedCategory ===
-                        "სამშენებლო ტექნიკა"
+                        selectedCategory === "სამშენებლო ტექნიკა"
                           ? "activeFilter"
                           : ""
                       }`}
                       onClick={() => {
-                        setSelectedCategory(
-                          "სამშენებლო ტექნიკა"
-                        )
+                        setSelectedCategory("სამშენებლო ტექნიკა")
                         setShowFilter(false)
                       }}
                     >
@@ -895,15 +881,12 @@ export default function CalculatorClient({
 
                     <button
                       className={`filterItem ${
-                        selectedCategory ===
-                        "სამშენებლო ინვენტარი"
+                        selectedCategory === "სამშენებლო ინვენტარი"
                           ? "activeFilter"
                           : ""
                       }`}
                       onClick={() => {
-                        setSelectedCategory(
-                          "სამშენებლო ინვენტარი"
-                        )
+                        setSelectedCategory("სამშენებლო ინვენტარი")
                         setShowFilter(false)
                       }}
                     >
@@ -930,9 +913,7 @@ export default function CalculatorClient({
           <div className="layout">
             <section>
               {filteredProducts.length === 0 ? (
-                <div className="noProducts">
-                  ასეთი პროდუქტი ვერ მოიძებნა
-                </div>
+                <div className="noProducts">ასეთი პროდუქტი ვერ მოიძებნა</div>
               ) : (
                 <div className="productsGrid">
                   {filteredProducts.map((product) => (
@@ -979,9 +960,7 @@ export default function CalculatorClient({
               </p>
 
               {items.length === 0 ? (
-                <div className="empty">
-                  ჯერ პროდუქტი არ არის დამატებული
-                </div>
+                <div className="empty">ჯერ პროდუქტი არ არის დამატებული</div>
               ) : (
                 <>
                   <div className="cartItems">
@@ -1050,15 +1029,10 @@ export default function CalculatorClient({
                       onClick={sendOrderToWhatsapp}
                       disabled={ordering}
                     >
-                      {ordering
-                        ? "შეკვეთა ინახება..."
-                        : "WhatsApp-ით შეკვეთა"}
+                      {ordering ? "შეკვეთა ინახება..." : "WhatsApp-ით შეკვეთა"}
                     </button>
 
-                    <a
-                      className="callButton"
-                      href="tel:596614614"
-                    >
+                    <a className="callButton" href="tel:596614614">
                       📞 დარეკვა: 596 614 614
                     </a>
 
