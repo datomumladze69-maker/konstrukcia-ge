@@ -749,18 +749,19 @@ export default function CalculatorClient({
         }
 
         @media (max-width: 1000px) {
-          .layout {
-            grid-template-columns: 1fr;
-          }
+  .layout {
+    grid-template-columns: 1fr;
+  }
 
-          .productsGrid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-          .calculatorBox {
-            position: static;
-          }
-        }
+  .calculatorBox {
+    position: static;
+    order: -1;
+  }
+}
 
         @media (max-width: 650px) {
           .toast {
